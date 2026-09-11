@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# GeoTIFF and heavy geospatial rasters (per competition guidelines)
+*.tif
+*.tiff
+*.geotiff
+!tests/fixtures/*.tif
+
+# Archives
+*.7z
+*.zip
+*.rar
+*.tar.gz
+*.tar
+
+# Data and Predictions
+data/rasters/
+data/reference_masks/
+predictions/
+output/
+runs/
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# macOS metadata
+__MACOSX/
+._*

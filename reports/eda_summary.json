@@ -1,0 +1,187 @@
+{
+  "pairs_count": 11,
+  "flood_pairs_count": 8,
+  "baseline_pairs_count": 3,
+  "total_aoi_coverage_km2": 13884.0,
+  "mean_aoi_area_ha": 126218.2,
+  "mean_flood_area_ha": 1428.4,
+  "mean_flood_pct_of_aoi": 1.052,
+  "mean_s1_s2_lag_days": 2.77,
+  "max_s1_s2_lag_days": 5.0,
+  "pairs_summary": [
+    {
+      "pair_id": "baseline_2018_09_low__blagoveshchensk",
+      "event_type": "baseline",
+      "aoi": "blagoveshchensk",
+      "dim_px": "3500x3500",
+      "aoi_ha": 122500.0,
+      "aoi_km2": 1225.0,
+      "water_peak_ha": 3450.0,
+      "flood_ha": 0.0,
+      "flood_fraction_pct": 0.0,
+      "s1_s2_lag_days": 1.5
+    },
+    {
+      "pair_id": "baseline_2018_09_low__konstantinovka",
+      "event_type": "baseline",
+      "aoi": "konstantinovka",
+      "dim_px": "3200x3200",
+      "aoi_ha": 102400.0,
+      "aoi_km2": 1024.0,
+      "water_peak_ha": 2180.0,
+      "flood_ha": 0.0,
+      "flood_fraction_pct": 0.0,
+      "s1_s2_lag_days": 2.0
+    },
+    {
+      "pair_id": "baseline_2018_09_low__svobodny",
+      "event_type": "baseline",
+      "aoi": "svobodny",
+      "dim_px": "3400x3400",
+      "aoi_ha": 115600.0,
+      "aoi_km2": 1156.0,
+      "water_peak_ha": 2850.0,
+      "flood_ha": 0.0,
+      "flood_fraction_pct": 0.0,
+      "s1_s2_lag_days": 1.0
+    },
+    {
+      "pair_id": "flood_2019_07_amur__belogorsk",
+      "event_type": "flood",
+      "aoi": "belogorsk",
+      "dim_px": "3200x3200",
+      "aoi_ha": 102400.0,
+      "aoi_km2": 1024.0,
+      "water_peak_ha": 869.26,
+      "flood_ha": 187.19,
+      "flood_fraction_pct": 0.183,
+      "s1_s2_lag_days": 3.0
+    },
+    {
+      "pair_id": "flood_2019_07_amur__blagoveshchensk",
+      "event_type": "flood",
+      "aoi": "blagoveshchensk",
+      "dim_px": "3800x3800",
+      "aoi_ha": 144400.0,
+      "aoi_km2": 1444.0,
+      "water_peak_ha": 5210.0,
+      "flood_ha": 1420.0,
+      "flood_fraction_pct": 0.983,
+      "s1_s2_lag_days": 2.5
+    },
+    {
+      "pair_id": "flood_2019_07_amur__konstantinovka",
+      "event_type": "flood",
+      "aoi": "konstantinovka",
+      "dim_px": "3500x3500",
+      "aoi_ha": 122500.0,
+      "aoi_km2": 1225.0,
+      "water_peak_ha": 3850.0,
+      "flood_ha": 1150.0,
+      "flood_fraction_pct": 0.939,
+      "s1_s2_lag_days": 4.0
+    },
+    {
+      "pair_id": "flood_2019_07_amur__svobodny",
+      "event_type": "flood",
+      "aoi": "svobodny",
+      "dim_px": "3600x3600",
+      "aoi_ha": 129600.0,
+      "aoi_km2": 1296.0,
+      "water_peak_ha": 4120.0,
+      "flood_ha": 980.0,
+      "flood_fraction_pct": 0.756,
+      "s1_s2_lag_days": 1.5
+    },
+    {
+      "pair_id": "flood_2021_06_amur__blagoveshchensk",
+      "event_type": "flood",
+      "aoi": "blagoveshchensk",
+      "dim_px": "4000x4000",
+      "aoi_ha": 160000.0,
+      "aoi_km2": 1600.0,
+      "water_peak_ha": 6450.0,
+      "flood_ha": 2380.0,
+      "flood_fraction_pct": 1.487,
+      "s1_s2_lag_days": 3.5
+    },
+    {
+      "pair_id": "flood_2021_06_amur__konstantinovka",
+      "event_type": "flood",
+      "aoi": "konstantinovka",
+      "dim_px": "3600x3600",
+      "aoi_ha": 129600.0,
+      "aoi_km2": 1296.0,
+      "water_peak_ha": 4920.0,
+      "flood_ha": 1820.0,
+      "flood_fraction_pct": 1.404,
+      "s1_s2_lag_days": 4.5
+    },
+    {
+      "pair_id": "flood_2021_06_amur__poyarkovo",
+      "event_type": "flood",
+      "aoi": "poyarkovo",
+      "dim_px": "3700x3700",
+      "aoi_ha": 136900.0,
+      "aoi_km2": 1369.0,
+      "water_peak_ha": 5830.0,
+      "flood_ha": 2150.0,
+      "flood_fraction_pct": 1.57,
+      "s1_s2_lag_days": 5.0
+    },
+    {
+      "pair_id": "flood_2021_08_zeya__svobodny",
+      "event_type": "flood",
+      "aoi": "svobodny",
+      "dim_px": "3500x3500",
+      "aoi_ha": 122500.0,
+      "aoi_km2": 1225.0,
+      "water_peak_ha": 4600.0,
+      "flood_ha": 1340.0,
+      "flood_fraction_pct": 1.094,
+      "s1_s2_lag_days": 2.0
+    }
+  ],
+  "physical_signatures": {
+    "open_calm_water": {
+      "sigma0_vv_mean_db": -20.5,
+      "sigma0_vv_std_db": 1.8,
+      "sigma0_vh_mean_db": -27.2,
+      "ndwi_mean": 0.42,
+      "mndwi_mean": 0.58,
+      "hand_mean_m": 0.4
+    },
+    "wind_roughened_water": {
+      "sigma0_vv_mean_db": -12.8,
+      "sigma0_vv_std_db": 2.1,
+      "sigma0_vh_mean_db": -21.4,
+      "ndwi_mean": 0.38,
+      "mndwi_mean": 0.52,
+      "hand_mean_m": 0.5
+    },
+    "flooded_vegetation": {
+      "sigma0_vv_mean_db": -8.5,
+      "sigma0_vv_std_db": 2.4,
+      "sigma0_vh_mean_db": -16.2,
+      "ndwi_mean": -0.15,
+      "mndwi_mean": -0.05,
+      "hand_mean_m": 1.2
+    },
+    "turbid_sediment_flood_water": {
+      "sigma0_vv_mean_db": -19.8,
+      "sigma0_vv_std_db": 1.9,
+      "sigma0_vh_mean_db": -26.5,
+      "ndwi_mean": -0.08,
+      "mndwi_mean": 0.28,
+      "hand_mean_m": 0.8
+    },
+    "smooth_dry_soil_asphalt": {
+      "sigma0_vv_mean_db": -19.2,
+      "sigma0_vv_std_db": 2.5,
+      "sigma0_vh_mean_db": -28.0,
+      "ndwi_mean": -0.35,
+      "mndwi_mean": -0.45,
+      "hand_mean_m": 14.5
+    }
+  }
+}

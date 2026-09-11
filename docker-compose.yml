@@ -1,0 +1,13 @@
+services:
+  hydrology-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kosmohackathon_voda
+    volumes:
+      - ./data:/app/data
+      - ./predictions:/app/predictions
+      - ./reports:/app/reports
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["python", "-m", "pytest", "tests/", "-v"]

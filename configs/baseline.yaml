@@ -1,0 +1,49 @@
+# Baseline Configuration for KosmoHackathon 2026
+# Case: Operational Hydrological Monitoring via Sentinel-1 (SAR) and Sentinel-2 (MSI)
+
+project:
+  name: "voda"
+  version: "0.1.0"
+  random_seed: 42
+
+crs: "EPSG:32652"
+resolution_meters: 10.0
+
+thresholds:
+  flood_tolerance_ha: 50.0
+  water_tolerance_ha: 200.0
+  baseline_max_fraction: 0.005  # 0.5% of AOI area
+  max_raster_discrepancy_ratio: 0.02  # 2% maximum discrepancy
+
+radar:
+  vv_otsu_range_db: [-24.0, -11.0]
+  delta_sigma0_drop_db: -3.0
+  speckle_filter: "lee"
+  speckle_window_size: 5
+
+optics:
+  mndwi_water_threshold: 0.15
+  ndwi_water_threshold: 0.10
+  ndvi_vegetation_threshold: 0.20
+  aweish_water_threshold: 0.00
+
+terrain:
+  hand_hard_threshold_meters: 25.0
+  hand_soft_center_meters: 15.0
+  hand_soft_temperature_meters: 3.0
+  max_slope_degrees: 5.0
+  jrc_gsw_permanent_water_pct: 80.0
+  min_water_body_pixels: 25  # 2500 m^2
+
+evaluation:
+  metric_weights:
+    q_flood: 0.45
+    q_water_peak: 0.25
+    q_water_pre: 0.15
+    spec_base: 0.15
+
+paths:
+  data_dir: "data"
+  reports_dir: "reports"
+  predictions_dir: "predictions"
+  sample_submission: "task/sample_submission.csv"

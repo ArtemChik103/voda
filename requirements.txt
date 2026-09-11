@@ -1,0 +1,11 @@
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.13.0
+scikit-learn>=1.4.0
+tifffile>=2024.2.12
+geopandas>=0.14.3
+pyyaml>=6.0.1
+pydantic>=2.6.0
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pytest>=8.0.0
