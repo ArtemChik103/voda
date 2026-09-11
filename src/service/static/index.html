@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вода-Космос: Оперативный гидрологический мониторинг</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">🛰️</div>
+                <div class="brand-title">
+                    <h1>Вода-Космос</h1>
+                    <span>КосмоХакатон 2026 | Sentinel-1 & 2</span>
+                </div>
+            </div>
+
+            <!-- Event Selector -->
+            <div class="control-group">
+                <label for="eventSelect">Спутниковое наблюдение (Пара):</label>
+                <select id="eventSelect" class="form-select">
+                    <option value="" disabled selected>Загрузка списка пар...</option>
+                </select>
+            </div>
+
+            <!-- Layer Controls -->
+            <div class="control-group">
+                <label>Режим отображения слоев:</label>
+                <div class="button-group">
+                    <button id="btnLayerAll" class="btn btn-primary active" onclick="setLayerMode('all')">Все слои</button>
+                    <button id="btnLayerFlood" class="btn btn-secondary" onclick="setLayerMode('flood')">Только паводок</button>
+                    <button id="btnLayerPre" class="btn btn-secondary" onclick="setLayerMode('pre')">Вода «до»</button>
+                </div>
+            </div>
+
+            <!-- Live Hydrological Metrics -->
+            <div class="metrics-panel">
+                <div class="panel-header">Гидрологический баланс</div>
+                <div class="metric-card highlight">
+                    <div class="metric-title">Новое затопление (Flood)</div>
+                    <div class="metric-value" id="valFloodHa">-- га</div>
+                    <div class="metric-subtitle" id="valFloodKm2">-- км² (--% от AOI)</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-card">
+                        <div class="metric-title">Вода на пике</div>
+                        <div class="metric-value" id="valPeakHa">-- га</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Вода до события</div>
+                        <div class="metric-value" id="valPreHa">-- га</div>
+                    </div>
+                </div>
+
+                <div class="risk-card" id="riskCard">
+                    <div class="risk-title">Оценка гидрологического риска</div>
+                    <div class="risk-badge" id="riskBadge">--</div>
+                    <div class="risk-text" id="riskText">Выберите пару для расчета...</div>
+                </div>
+            </div>
+
+            <!-- Land Cover Breakdown -->
+            <div class="landcover-panel">
+                <div class="panel-header">Затопление по ESA WorldCover</div>
+                <div class="landcover-bars" id="landcoverBars">
+                    <div style="color: #64748b; font-size: 13px;">Загрузка данных покрова...</div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-panel">
+                <button class="btn btn-accent w-full" onclick="exportGeoJSON()">📥 Экспорт контуров (GeoJSON)</button>
+                <button class="btn btn-outline w-full" onclick="openReport()">📄 Сформировать отчет МЧС</button>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <main class="map-container">
+            <div id="map" class="map-view"></div>
+            <!-- Map Overlay Legend -->
+            <div class="map-legend">
+                <div class="legend-item"><span class="color-box water-pre"></span> Водное зеркало «до»</div>
+                <div class="legend-item"><span class="color-box water-peak"></span> Водное зеркало на пике</div>
+                <div class="legend-item"><span class="color-box flood-new"></span> Зона нового затопления</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

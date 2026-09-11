@@ -11,3 +11,18 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     command: ["python", "-m", "pytest", "tests/", "-v"]
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kosmohackathon_dashboard
+    volumes:
+      - ./data:/app/data
+      - ./predictions:/app/predictions
+      - ./reports:/app/reports
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["uvicorn", "src.service.api:app", "--host", "0.0.0.0", "--port", "8000"]
