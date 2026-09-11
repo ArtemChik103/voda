@@ -31,12 +31,35 @@ function initMap() {
         zoomControl: true,
     });
 
-    // Dark cartographic basemap
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-        subdomains: 'abcd',
+    // 1. High-Resolution Satellite imagery (Esri World Imagery) - No API Key Needed!
+    const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics',
+        maxZoom: 18
+    });
+
+    // 2. Pure Dark Hydrological Map (OSM with dark filter) - No API Key Needed!
+    const osmDark = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        className: 'osm-dark-tiles',
         maxZoom: 19
-    }).addTo(map);
+    });
+
+    // 3. OpenStreetMap Standard
+    const osmLight = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    });
+
+    // Default to satellite basemap for space monitoring context
+    esriSatellite.addTo(map);
+
+    const baseLayers = {
+        "🛰️ Спутник (Esri Satellite)": esriSatellite,
+        "🗺️ Тёмная карта (OSM Dark)": osmDark,
+        "🗺️ Топографическая (OSM)": osmLight
+    };
+
+    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
 }
 
 async function loadPairsList() {

@@ -12,6 +12,11 @@
     --flood-new: #ef4444;
 }
 
+/* Dark mode tiles filter for OpenStreetMap without API key */
+.leaflet-tile-pane .osm-dark-tiles {
+    filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

@@ -181,21 +181,56 @@ def get_pair_geojson(pair_id: str, download: bool = False):
     }
     lat0, lon0 = centers.get(aoi, (50.28, 127.54))
 
-    # Construct realistic GeoJSON polygons along the river channel and floodplain
+    # Construct realistic sinuous GeoJSON polygons along the natural river meanders and floodplain
     features = []
+    num_steps = 36
+    t_vals = np.linspace(-0.16, 0.16, num_steps)
 
-    # 1. Base river channel polygon
-    river_coords = [
-        [lon0 - 0.12, lat0 - 0.03],
-        [lon0 - 0.05, lat0 - 0.01],
-        [lon0 + 0.02, lat0 + 0.02],
-        [lon0 + 0.08, lat0 + 0.04],
-        [lon0 + 0.07, lat0 + 0.06],
-        [lon0 + 0.01, lat0 + 0.03],
-        [lon0 - 0.06, lat0 + 0.00],
-        [lon0 - 0.13, lat0 - 0.02],
-        [lon0 - 0.12, lat0 - 0.03],
-    ]
+    # Parametric curve for river meanders based on AOI orientation
+    left_bank = []
+    right_bank = []
+    flood_left = []
+    flood_right = []
+
+    for i, t in enumerate(t_vals):
+        # Sinuous meander formula
+        if aoi in ("svobodny", "blagoveshchensk"):
+            # North-to-south flow (Zeya)
+            d_lat = t
+            d_lon = 0.045 * np.sin(4.0 * np.pi * (t + 0.16) / 0.32) + 0.015 * np.cos(8.0 * np.pi * (t + 0.16) / 0.32)
+            c_lat = lat0 + d_lat
+            c_lon = lon0 + d_lon
+
+            # Channel width (~250-400m)
+            hw = 0.0035 + 0.001 * np.sin(2 * np.pi * i / num_steps)
+            left_bank.append([round(c_lon - hw, 5), round(c_lat, 5)])
+            right_bank.append([round(c_lon + hw, 5), round(c_lat, 5)])
+
+            # Floodplain expansion (~1-3km in lowlands)
+            f_hw_l = hw + (0.012 + 0.008 * np.sin(np.pi * i / num_steps))
+            f_hw_r = hw + (0.009 + 0.006 * np.cos(np.pi * i / num_steps))
+            flood_left.append([round(c_lon - f_hw_l, 5), round(c_lat, 5)])
+            flood_right.append([round(c_lon + f_hw_r, 5), round(c_lat, 5)])
+        else:
+            # West-to-east flow (Amur, Tom)
+            d_lon = t
+            d_lat = 0.035 * np.sin(3.5 * np.pi * (t + 0.16) / 0.32) + 0.012 * np.cos(7.0 * np.pi * (t + 0.16) / 0.32)
+            c_lat = lat0 + d_lat
+            c_lon = lon0 + d_lon
+
+            # Channel width (~300-500m)
+            hw = 0.0028 + 0.0008 * np.cos(2 * np.pi * i / num_steps)
+            left_bank.append([round(c_lon, 5), round(c_lat + hw, 5)])
+            right_bank.append([round(c_lon, 5), round(c_lat - hw, 5)])
+
+            # Floodplain expansion
+            f_hw_t = hw + (0.011 + 0.007 * np.sin(np.pi * i / num_steps))
+            f_hw_b = hw + (0.008 + 0.005 * np.cos(np.pi * i / num_steps))
+            flood_left.append([round(c_lon, 5), round(c_lat + f_hw_t, 5)])
+            flood_right.append([round(c_lon, 5), round(c_lat - f_hw_b, 5)])
+
+    # Close polygons
+    river_coords = left_bank + right_bank[::-1] + [left_bank[0]]
     features.append({
         "type": "Feature",
         "properties": {
@@ -209,20 +244,9 @@ def get_pair_geojson(pair_id: str, download: bool = False):
         }
     })
 
-    # 2. Flood inundation zone (if flood event)
+    # Flood inundation zone
     if flood_ha > 0:
-        flood_coords = [
-            [lon0 - 0.08, lat0 - 0.02],
-            [lon0 - 0.02, lat0 + 0.00],
-            [lon0 + 0.04, lat0 + 0.01],
-            [lon0 + 0.09, lat0 + 0.03],
-            [lon0 + 0.11, lat0 + 0.06],
-            [lon0 + 0.07, lat0 + 0.08],
-            [lon0 + 0.01, lat0 + 0.05],
-            [lon0 - 0.05, lat0 + 0.02],
-            [lon0 - 0.09, lat0 - 0.01],
-            [lon0 - 0.08, lat0 - 0.02],
-        ]
+        flood_coords = flood_left + flood_right[::-1] + [flood_left[0]]
         features.append({
             "type": "Feature",
             "properties": {
