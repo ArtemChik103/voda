@@ -198,62 +198,63 @@ def render_html_report(report_data: Dict) -> str:
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background: var(--bg-page);
             color: var(--text-main);
-            padding: 24px;
+            padding: 24px 16px;
             margin: 0;
-            line-height: 1.5;
+            line-height: 1.4;
         }}
         .container {{
-            max-width: 900px;
+            max-width: 820px;
             margin: 0 auto;
             background: var(--bg-card);
             border-radius: 12px;
-            padding: 36px;
+            padding: 28px 32px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.6);
             border: 1px solid var(--border);
         }}
         .header-agency {{
             border-bottom: 2px solid #ef4444;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }}
         .agency-title h2 {{
-            font-size: 13px;
+            font-size: 12px;
             color: #ef4444;
             font-weight: 700;
             letter-spacing: 0.8px;
             text-transform: uppercase;
-            margin: 0 0 4px 0;
+            margin: 0 0 3px 0;
         }}
         .agency-title h1 {{
-            font-size: 20px;
+            font-size: 18px;
             color: #ffffff;
-            margin: 0 0 6px 0;
+            margin: 0 0 4px 0;
             font-weight: 800;
         }}
         .agency-title p {{
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-sub);
             margin: 0;
         }}
         .doc-meta {{
             text-align: right;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-sub);
+            line-height: 1.5;
         }}
         .doc-meta strong {{
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
         }}
 
         /* Action bar for downloading files */
         .action-toolbar {{
             display: flex;
             gap: 12px;
-            margin-bottom: 24px;
-            padding: 12px 16px;
+            margin-bottom: 18px;
+            padding: 10px 14px;
             background: rgba(56, 189, 248, 0.08);
             border: 1px solid rgba(56, 189, 248, 0.25);
             border-radius: 8px;
@@ -261,7 +262,7 @@ def render_html_report(report_data: Dict) -> str:
             justify-content: space-between;
         }}
         .action-toolbar-title {{
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--accent);
         }}
@@ -273,7 +274,7 @@ def render_html_report(report_data: Dict) -> str:
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
@@ -294,30 +295,30 @@ def render_html_report(report_data: Dict) -> str:
             align-items: center;
             justify-content: space-between;
             background: {risk['color']}22;
-            border-left: 5px solid {risk['color']};
-            padding: 14px 18px;
+            border-left: 4px solid {risk['color']};
+            padding: 10px 14px;
             border-radius: 6px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }}
         .risk-badge {{
             display: inline-block;
-            padding: 6px 14px;
-            border-radius: 6px;
+            padding: 4px 10px;
+            border-radius: 4px;
             font-weight: 800;
             background: {risk['color']};
             color: #ffffff;
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
         }}
         .metric-grid {{
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 14px 0;
         }}
         .card {{
             background: rgba(11, 19, 41, 0.7);
-            padding: 16px;
+            padding: 12px 14px;
             border-radius: 8px;
             border: 1px solid var(--border);
         }}
@@ -326,11 +327,11 @@ def render_html_report(report_data: Dict) -> str:
             color: var(--text-sub);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 600;
         }}
         .card-val {{
-            font-size: 22px;
+            font-size: 19px;
             font-weight: 800;
             color: #ffffff;
         }}
@@ -340,21 +341,21 @@ def render_html_report(report_data: Dict) -> str:
         .rec-box {{
             background: rgba(11, 19, 41, 0.7);
             border-left: 4px solid {risk['color']};
-            padding: 14px 18px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
-            font-size: 14px;
+            padding: 10px 14px;
+            margin: 14px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
         }}
         table {{
             width: 100%;
             border-collapse: collapse;
-            margin-top: 14px;
+            margin-top: 10px;
         }}
         th, td {{
-            padding: 10px 14px;
+            padding: 8px 10px;
             border-bottom: 1px solid var(--border);
             text-align: left;
-            font-size: 13px;
+            font-size: 12px;
         }}
         th {{
             color: var(--text-sub);
@@ -364,79 +365,125 @@ def render_html_report(report_data: Dict) -> str:
             background: rgba(11, 19, 41, 0.5);
         }}
         .signatures {{
-            margin-top: 40px;
-            padding-top: 24px;
+            margin-top: 24px;
+            padding-top: 16px;
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-sub);
+            page-break-inside: avoid;
         }}
         .sig-block {{
             width: 45%;
         }}
         .sig-line {{
             border-bottom: 1px solid var(--text-sub);
-            margin-top: 30px;
-            padding-bottom: 4px;
-            font-size: 11px;
+            margin-top: 24px;
+            padding-bottom: 3px;
+            font-size: 10px;
             text-align: center;
         }}
 
-        /* Strict Print / PDF formatting (A4 White paper) */
+        /* Strict Single-Page A4 Portrait Print Formatting */
+        @page {{
+            size: A4 portrait;
+            margin: 8mm 12mm 8mm 12mm;
+        }}
         @media print {{
-            body {{
+            html, body {{
                 background: #ffffff !important;
                 color: #000000 !important;
                 padding: 0 !important;
+                margin: 0 !important;
+                font-size: 10.5pt !important;
+                line-height: 1.3 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }}
             .container {{
                 box-shadow: none !important;
                 border: none !important;
                 padding: 0 !important;
+                margin: 0 !important;
                 max-width: 100% !important;
+                width: 100% !important;
                 background: #ffffff !important;
+                page-break-inside: avoid !important;
             }}
             .action-toolbar {{
                 display: none !important;
             }}
             .header-agency {{
                 border-bottom: 2px solid #000 !important;
+                padding-bottom: 6px !important;
+                margin-bottom: 10px !important;
             }}
-            .agency-title h2 {{ color: #000 !important; }}
-            .agency-title h1 {{ color: #000 !important; font-size: 18px !important; }}
-            .agency-title p {{ color: #333 !important; }}
-            .doc-meta strong {{ color: #000 !important; }}
+            .agency-title h2 {{ color: #000 !important; font-size: 9pt !important; }}
+            .agency-title h1 {{ color: #000 !important; font-size: 14pt !important; margin: 2px 0 !important; }}
+            .agency-title p {{ color: #333 !important; font-size: 9pt !important; }}
+            .doc-meta {{ font-size: 9pt !important; }}
+            .doc-meta strong {{ color: #000 !important; font-size: 10pt !important; }}
             .card {{
                 background: #f8fafc !important;
-                border: 1px solid #cbd5e1 !important;
+                border: 1px solid #94a3b8 !important;
+                padding: 8px 10px !important;
             }}
-            .card-val {{ color: #000000 !important; }}
+            .card-label {{ font-size: 8pt !important; color: #475569 !important; }}
+            .card-val {{ color: #000000 !important; font-size: 14pt !important; }}
             .highlight .card-val {{ color: #b91c1c !important; }}
+            .metric-grid {{
+                gap: 8px !important;
+                margin: 8px 0 !important;
+            }}
             .rec-box {{
                 background: #f8fafc !important;
-                border: 1px solid #cbd5e1 !important;
+                border: 1px solid #94a3b8 !important;
                 border-left: 4px solid #000 !important;
+                color: #000 !important;
+                padding: 6px 10px !important;
+                margin: 8px 0 !important;
+                font-size: 9pt !important;
+            }}
+            h3 {{
+                font-size: 10pt !important;
+                margin: 10px 0 4px 0 !important;
                 color: #000 !important;
             }}
             table, th, td {{
                 border-color: #cbd5e1 !important;
                 color: #000 !important;
+                padding: 4px 8px !important;
+                font-size: 9pt !important;
             }}
             th {{
                 background: #f1f5f9 !important;
+                font-size: 8.5pt !important;
             }}
             .risk-banner {{
-                background: #f1f5f9 !important;
-                border: 1px solid #cbd5e1 !important;
+                background: #f8fafc !important;
+                border: 1px solid #94a3b8 !important;
+                padding: 6px 10px !important;
+                margin-bottom: 8px !important;
             }}
             .risk-badge {{
                 background: #000000 !important;
                 color: #ffffff !important;
+                font-size: 9pt !important;
+                padding: 3px 8px !important;
             }}
             .signatures {{
                 color: #000 !important;
-                border-top-color: #000 !important;
+                border-top: 1px solid #000 !important;
+                margin-top: 12px !important;
+                padding-top: 8px !important;
+                font-size: 9pt !important;
+                page-break-inside: avoid !important;
+            }}
+            .sig-line {{
+                border-bottom: 1px solid #000 !important;
+                margin-top: 16px !important;
+                font-size: 8pt !important;
             }}
         }}
     </style>
