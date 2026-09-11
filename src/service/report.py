@@ -365,8 +365,8 @@ def render_html_report(report_data: Dict) -> str:
             background: rgba(11, 19, 41, 0.5);
         }}
         .signatures {{
-            margin-top: 24px;
-            padding-top: 16px;
+            margin-top: 20px;
+            padding-top: 14px;
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -375,14 +375,23 @@ def render_html_report(report_data: Dict) -> str:
             page-break-inside: avoid;
         }}
         .sig-block {{
-            width: 45%;
+            width: 46%;
         }}
-        .sig-line {{
+        .sig-role {{
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 22px;
+        }}
+        .sig-line-bar {{
             border-bottom: 1px solid var(--text-sub);
-            margin-top: 24px;
-            padding-bottom: 3px;
-            font-size: 10px;
+            width: 100%;
+            height: 1px;
+        }}
+        .sig-caption {{
+            font-size: 9px;
+            color: var(--text-sub);
             text-align: center;
+            margin-top: 3px;
         }}
 
         /* Strict Single-Page A4 Portrait Print Formatting */
@@ -475,15 +484,23 @@ def render_html_report(report_data: Dict) -> str:
             .signatures {{
                 color: #000 !important;
                 border-top: 1px solid #000 !important;
-                margin-top: 12px !important;
-                padding-top: 8px !important;
-                font-size: 9pt !important;
+                margin-top: 10px !important;
+                padding-top: 6px !important;
+                font-size: 8.5pt !important;
                 page-break-inside: avoid !important;
             }}
-            .sig-line {{
+            .sig-role {{
+                color: #000 !important;
+                margin-bottom: 16px !important;
+                font-weight: 700 !important;
+            }}
+            .sig-line-bar {{
                 border-bottom: 1px solid #000 !important;
-                margin-top: 16px !important;
-                font-size: 8pt !important;
+            }}
+            .sig-caption {{
+                color: #475569 !important;
+                font-size: 7pt !important;
+                margin-top: 2px !important;
             }}
         }}
     </style>
@@ -567,12 +584,14 @@ def render_html_report(report_data: Dict) -> str:
     <!-- Official Signatures Block -->
     <div class="signatures">
         <div class="sig-block">
-            <strong>Оператор космического мониторинга ДЗЗ:</strong>
-            <div class="sig-line">(подпись / инициалы)</div>
+            <div class="sig-role">Оператор космического мониторинга ДЗЗ:</div>
+            <div class="sig-line-bar"></div>
+            <div class="sig-caption">(подпись / инициалы)</div>
         </div>
         <div class="sig-block">
-            <strong>Старший оперативный дежурный ЦУКС:</strong>
-            <div class="sig-line">(подпись / инициалы)</div>
+            <div class="sig-role">Старший оперативный дежурный ЦУКС:</div>
+            <div class="sig-line-bar"></div>
+            <div class="sig-caption">(подпись / инициалы)</div>
         </div>
     </div>
 </div>
