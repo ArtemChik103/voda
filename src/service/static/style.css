@@ -129,6 +129,26 @@ label {
     transition: all 0.2s;
 }
 
+.btn-mode {
+    background: var(--card-bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    flex: 1;
+    text-align: center;
+}
+
+.btn-mode:hover {
+    color: var(--text-main);
+    border-color: #4b5563;
+}
+
+.btn-mode.active {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
 .btn-primary {
     background: #2563eb;
     color: white;
@@ -142,12 +162,6 @@ label {
 
 .btn-secondary:hover {
     color: var(--text-main);
-}
-
-.btn-primary.active, .btn-secondary.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
 }
 
 .btn-accent {
