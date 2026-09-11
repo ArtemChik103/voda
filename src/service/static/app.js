@@ -31,6 +31,11 @@ function initMap() {
         zoomControl: true,
     });
 
+    // Remove any third-party political flag icons or prefixes from map attribution
+    if (map.attributionControl) {
+        map.attributionControl.setPrefix(false);
+    }
+
     // 1. High-Resolution Satellite imagery (Esri World Imagery) - No API Key Needed!
     const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics',

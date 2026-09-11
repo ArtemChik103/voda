@@ -17,6 +17,15 @@
     filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
 }
 
+/* Remove any attribution flag icons completely */
+.leaflet-attribution-flag,
+svg.leaflet-attribution-flag {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
