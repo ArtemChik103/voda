@@ -161,12 +161,17 @@ def generate_analytical_report(
 
 def render_html_report(report_data: Dict) -> str:
     """Renders standalone HTML executive report for printing or web display."""
+    from datetime import datetime
+
     meta = report_data["report_metadata"]
     bal = report_data["hydrological_balance"]
     risk = report_data["risk_assessment"]
+    pair_id = meta["target_pair"]
+    now_str = datetime.now().strftime("%d.%m.%Y %H:%M")
+
     lc_rows = "".join(
         f"""<tr>
-            <td><span style="display:inline-block;width:12px;height:12px;background:{r['color']};border-radius:2px;margin-right:8px;"></span>{r['class_name']}</td>
+            <td><span style="display:inline-block;width:12px;height:12px;background:{r['color']};border-radius:2px;margin-right:8px;vertical-align:middle;"></span>{r['class_name']}</td>
             <td style="text-align:right;font-weight:600;">{r['area_ha']} га</td>
             <td style="text-align:right;">{r['percentage']}%</td>
         </tr>"""
@@ -177,61 +182,354 @@ def render_html_report(report_data: Dict) -> str:
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Гидрологический отчет: {meta['target_pair']}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Донесение ЦУКС МЧС: {pair_id}</title>
     <style>
-        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 24px; margin: 0; }}
-        .container {{ max-width: 800px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 32px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }}
-        h1 {{ font-size: 22px; margin-top: 0; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 12px; }}
-        .risk-badge {{ display: inline-block; padding: 6px 14px; border-radius: 6px; font-weight: bold; background: {risk['color']}; color: #ffffff; margin-bottom: 16px; }}
-        .metric-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }}
-        .card {{ background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155; }}
-        .card-label {{ font-size: 12px; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; }}
-        .card-val {{ font-size: 20px; font-weight: bold; color: #38bdf8; }}
-        table {{ width: 100%; border-collapse: collapse; margin-top: 16px; }}
-        th, td {{ padding: 10px 12px; border-bottom: 1px solid #334155; text-align: left; font-size: 14px; }}
-        th {{ color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 12px; }}
-        .rec-box {{ background: #0f172a; border-left: 4px solid {risk['color']}; padding: 12px 16px; margin: 20px 0; border-radius: 0 8px 8px 0; }}
+        :root {{
+            --bg-page: #0b1329;
+            --bg-card: #152238;
+            --border: #2a3b5c;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --accent: #38bdf8;
+        }}
+        * {{ box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            padding: 24px;
+            margin: 0;
+            line-height: 1.5;
+        }}
+        .container {{
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 36px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            border: 1px solid var(--border);
+        }}
+        .header-agency {{
+            border-bottom: 2px solid #ef4444;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+        .agency-title h2 {{
+            font-size: 13px;
+            color: #ef4444;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }}
+        .agency-title h1 {{
+            font-size: 20px;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            font-weight: 800;
+        }}
+        .agency-title p {{
+            font-size: 13px;
+            color: var(--text-sub);
+            margin: 0;
+        }}
+        .doc-meta {{
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-sub);
+        }}
+        .doc-meta strong {{
+            color: #ffffff;
+            font-size: 14px;
+        }}
+
+        /* Action bar for downloading files */
+        .action-toolbar {{
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 12px 16px;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 8px;
+            align-items: center;
+            justify-content: space-between;
+        }}
+        .action-toolbar-title {{
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+        }}
+        .btn-group-actions {{
+            display: flex;
+            gap: 8px;
+        }}
+        .btn-act {{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }}
+        .btn-print {{ background: #2563eb; color: #fff; }}
+        .btn-print:hover {{ background: #1d4ed8; }}
+        .btn-geo {{ background: #059669; color: #fff; }}
+        .btn-geo:hover {{ background: #047857; }}
+        .btn-json {{ background: #475569; color: #fff; }}
+        .btn-json:hover {{ background: #334155; }}
+
+        .risk-banner {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: {risk['color']}22;
+            border-left: 5px solid {risk['color']};
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+        }}
+        .risk-badge {{
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 800;
+            background: {risk['color']};
+            color: #ffffff;
+            font-size: 14px;
+            text-transform: uppercase;
+        }}
+        .metric-grid {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }}
+        .card {{
+            background: rgba(11, 19, 41, 0.7);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }}
+        .card-label {{
+            font-size: 11px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }}
+        .card-val {{
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+        }}
+        .highlight .card-val {{
+            color: #ef4444;
+        }}
+        .rec-box {{
+            background: rgba(11, 19, 41, 0.7);
+            border-left: 4px solid {risk['color']};
+            padding: 14px 18px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+        }}
+        th, td {{
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            font-size: 13px;
+        }}
+        th {{
+            color: var(--text-sub);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            background: rgba(11, 19, 41, 0.5);
+        }}
+        .signatures {{
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-sub);
+        }}
+        .sig-block {{
+            width: 45%;
+        }}
+        .sig-line {{
+            border-bottom: 1px solid var(--text-sub);
+            margin-top: 30px;
+            padding-bottom: 4px;
+            font-size: 11px;
+            text-align: center;
+        }}
+
+        /* Strict Print / PDF formatting (A4 White paper) */
+        @media print {{
+            body {{
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+            }}
+            .container {{
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+            }}
+            .action-toolbar {{
+                display: none !important;
+            }}
+            .header-agency {{
+                border-bottom: 2px solid #000 !important;
+            }}
+            .agency-title h2 {{ color: #000 !important; }}
+            .agency-title h1 {{ color: #000 !important; font-size: 18px !important; }}
+            .agency-title p {{ color: #333 !important; }}
+            .doc-meta strong {{ color: #000 !important; }}
+            .card {{
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+            }}
+            .card-val {{ color: #000000 !important; }}
+            .highlight .card-val {{ color: #b91c1c !important; }}
+            .rec-box {{
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                border-left: 4px solid #000 !important;
+                color: #000 !important;
+            }}
+            table, th, td {{
+                border-color: #cbd5e1 !important;
+                color: #000 !important;
+            }}
+            th {{
+                background: #f1f5f9 !important;
+            }}
+            .risk-banner {{
+                background: #f1f5f9 !important;
+                border: 1px solid #cbd5e1 !important;
+            }}
+            .risk-badge {{
+                background: #000000 !important;
+                color: #ffffff !important;
+            }}
+            .signatures {{
+                color: #000 !important;
+                border-top-color: #000 !important;
+            }}
+        }}
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Оперативный сводный гидрологический отчет</h1>
-    <div style="font-size:14px;color:#94a3b8;margin-bottom:12px;">Событие: <strong>{meta['target_pair']}</strong> | Проекция: {meta['crs']} | Разрешение: {meta['ground_resolution']}</div>
-    <div class="risk-badge">Уровень риска: {risk['level_ru']}</div>
+    <!-- Agency Header -->
+    <div class="header-agency">
+        <div class="agency-title">
+            <h2>МЧС РОССИИ &bull; ГЛАВНОЕ УПРАВЛЕНИЕ ПО АМУРСКОЙ ОБЛАСТИ</h2>
+            <h1>ЦЕНТР УПРАВЛЕНИЯ В КРИЗИСНЫХ СИТУАЦИЯХ (ЦУКС)</h1>
+            <p>Комплекс спутникового мониторинга паводков &laquo;Вода-Космос&raquo; (Sentinel-1 / Sentinel-2)</p>
+        </div>
+        <div class="doc-meta">
+            СВОДКА <strong>№ {pair_id}</strong><br/>
+            Дата: <strong>{now_str}</strong><br/>
+            Проекция: <strong>{meta['crs']}</strong>
+        </div>
+    </div>
 
+    <!-- Actions toolbar with direct file downloads -->
+    <div class="action-toolbar">
+        <div class="action-toolbar-title">📄 Экспорт и сохранение документа:</div>
+        <div class="btn-group-actions">
+            <button class="btn-act btn-print" onclick="window.print()">🖨️ Распечатать / Сохранить в PDF</button>
+            <a class="btn-act btn-geo" href="/api/v1/pairs/{pair_id}/geojson?download=true" download>🗺️ Скачать GeoJSON контуры</a>
+            <a class="btn-act btn-json" href="/api/v1/pairs/{pair_id}/report" target="_blank">📊 Скачать JSON данные</a>
+        </div>
+    </div>
+
+    <!-- Risk Status Banner -->
+    <div class="risk-banner">
+        <div>
+            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-sub);margin-bottom:4px;">Текущий статус гидрологической угрозы:</div>
+            <div style="font-size:16px;font-weight:700;">{risk['level_ru']}</div>
+        </div>
+        <div class="risk-badge">{risk['level']}</div>
+    </div>
+
+    <!-- Recommendations -->
     <div class="rec-box">
-        <strong>Рекомендации службам МЧС и водным управлениям:</strong><br/>
+        <strong>Предписания оперативному дежурному ЦУКС и гидрологическим постам:</strong><br/>
         {risk['recommendation']}
     </div>
 
+    <!-- Hydrological Balance -->
+    <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent);margin:24px 0 12px 0;">Гидрологический баланс района наблюдения</h3>
     <div class="metric-grid">
-        <div class="card">
-            <div class="card-label">Новое затопление</div>
+        <div class="card highlight">
+            <div class="card-label">Новое затопление (Flood)</div>
             <div class="card-val">{bal['flood_inundation_ha']} га</div>
-            <div style="font-size:12px;color:#64748b;">{bal['flood_inundation_km2']} км² ({bal['flood_fraction_of_aoi_pct']}%)</div>
+            <div style="font-size:12px;color:#ef4444;margin-top:4px;">{bal['flood_inundation_km2']} км² ({bal['flood_fraction_of_aoi_pct']}% от AOI)</div>
         </div>
         <div class="card">
-            <div class="card-label">Вода на пике</div>
+            <div class="card-label">Вода на пике паводка</div>
             <div class="card-val">{bal['water_peak_ha']} га</div>
-            <div style="font-size:12px;color:#64748b;">Максимальный разлив</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-top:4px;">Суммарное водное зеркало</div>
         </div>
         <div class="card">
-            <div class="card-label">Вода до события</div>
+            <div class="card-label">Базовое русло (Межень)</div>
             <div class="card-val">{bal['water_pre_ha']} га</div>
-            <div style="font-size:12px;color:#64748b;">Базовый урез русла</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-top:4px;">Урез воды до события</div>
         </div>
     </div>
 
-    <h2 style="font-size:16px;color:#e2e8f0;margin-top:28px;">Раскладка затопления по категориям ESA WorldCover</h2>
+    <!-- WorldCover Land Impact -->
+    <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent);margin:28px 0 12px 0;">Распределение площади затопления по категориям ESA WorldCover</h3>
     <table>
         <thead>
-            <tr><th>Категория земного покрова</th><th style="text-align:right;">Площадь</th><th style="text-align:right;">Доля</th></tr>
+            <tr>
+                <th>Категория земельного фонда</th>
+                <th style="text-align:right;">Площадь затопления</th>
+                <th style="text-align:right;">Доля от паводка</th>
+            </tr>
         </thead>
         <tbody>
             {lc_rows}
         </tbody>
     </table>
+
+    <!-- Official Signatures Block -->
+    <div class="signatures">
+        <div class="sig-block">
+            <strong>Оператор космического мониторинга ДЗЗ:</strong>
+            <div class="sig-line">(подпись / инициалы)</div>
+        </div>
+        <div class="sig-block">
+            <strong>Старший оперативный дежурный ЦУКС:</strong>
+            <div class="sig-line">(подпись / инициалы)</div>
+        </div>
+    </div>
 </div>
 </body>
 </html>"""
     return html
+
