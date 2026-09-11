@@ -1,0 +1,1190 @@
+{
+  "baseline_2018_09_low__blagoveshchensk": {
+    "pair_id": "baseline_2018_09_low__blagoveshchensk",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -23.098,
+        "max": -8.704,
+        "mean": -12.405,
+        "std": 2.282
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.877,
+        "max": -15.811,
+        "mean": -19.402,
+        "std": 2.283
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.821,
+        "max": -7.761,
+        "mean": -12.543,
+        "std": 2.107
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.265,
+        "max": -15.241,
+        "mean": -19.549,
+        "std": 2.112
+      },
+      "sar_delta_vv_db": {
+        "min": -5.863,
+        "max": 3.94,
+        "mean": -0.138,
+        "std": 0.405
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -13.093,
+        "max": -1.727,
+        "mean": -7.006,
+        "std": 0.36
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.196,
+        "std": 0.316
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.457,
+        "std": 0.347
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.434,
+        "std": 0.195
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.467,
+        "std": 0.273
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "baseline_2018_09_low__konstantinovka": {
+    "pair_id": "baseline_2018_09_low__konstantinovka",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.875,
+        "max": -7.18,
+        "mean": -12.397,
+        "std": 2.281
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.826,
+        "max": -14.898,
+        "mean": -19.398,
+        "std": 2.276
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -21.777,
+        "max": -7.891,
+        "mean": -12.552,
+        "std": 2.104
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.161,
+        "max": -14.922,
+        "mean": -19.55,
+        "std": 2.105
+      },
+      "sar_delta_vv_db": {
+        "min": -5.961,
+        "max": 4.575,
+        "mean": -0.155,
+        "std": 0.404
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -12.125,
+        "max": -2.668,
+        "mean": -6.999,
+        "std": 0.362
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.196,
+        "std": 0.316
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.457,
+        "std": 0.347
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.434,
+        "std": 0.195
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.467,
+        "std": 0.273
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "baseline_2018_09_low__svobodny": {
+    "pair_id": "baseline_2018_09_low__svobodny",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.703,
+        "max": -8.47,
+        "mean": -12.399,
+        "std": 2.283
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.574,
+        "max": -15.737,
+        "mean": -19.398,
+        "std": 2.286
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -21.976,
+        "max": -8.446,
+        "mean": -12.552,
+        "std": 2.104
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.112,
+        "max": -15.763,
+        "mean": -19.545,
+        "std": 2.108
+      },
+      "sar_delta_vv_db": {
+        "min": -4.94,
+        "max": 4.671,
+        "mean": -0.154,
+        "std": 0.405
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -12.115,
+        "max": -0.874,
+        "mean": -6.993,
+        "std": 0.359
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.196,
+        "std": 0.316
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.457,
+        "std": 0.347
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.434,
+        "std": 0.195
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.467,
+        "std": 0.273
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2019_07_amur__belogorsk": {
+    "pair_id": "flood_2019_07_amur__belogorsk",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.838,
+        "max": -8.96,
+        "mean": -12.392,
+        "std": 2.281
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.686,
+        "max": -15.25,
+        "mean": -19.399,
+        "std": 2.277
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.175,
+        "max": -9.124,
+        "mean": -13.588,
+        "std": 3.273
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.927,
+        "max": -16.481,
+        "mean": -20.593,
+        "std": 3.273
+      },
+      "sar_delta_vv_db": {
+        "min": -11.267,
+        "max": 2.72,
+        "mean": -1.195,
+        "std": 2.687
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.483,
+        "max": -1.794,
+        "mean": -7.005,
+        "std": 0.36
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2019_07_amur__blagoveshchensk": {
+    "pair_id": "flood_2019_07_amur__blagoveshchensk",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.599,
+        "max": -8.981,
+        "mean": -12.405,
+        "std": 2.284
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.468,
+        "max": -15.899,
+        "mean": -19.403,
+        "std": 2.279
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.486,
+        "max": -8.504,
+        "mean": -13.59,
+        "std": 3.275
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.267,
+        "max": -16.255,
+        "mean": -20.593,
+        "std": 3.276
+      },
+      "sar_delta_vv_db": {
+        "min": -11.463,
+        "max": 3.184,
+        "mean": -1.184,
+        "std": 2.694
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.365,
+        "max": -1.647,
+        "mean": -7.003,
+        "std": 0.36
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2019_07_amur__konstantinovka": {
+    "pair_id": "flood_2019_07_amur__konstantinovka",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.87,
+        "max": -7.849,
+        "mean": -12.395,
+        "std": 2.28
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.802,
+        "max": -15.376,
+        "mean": -19.396,
+        "std": 2.274
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.261,
+        "max": -8.448,
+        "mean": -13.587,
+        "std": 3.275
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.204,
+        "max": -15.573,
+        "mean": -20.588,
+        "std": 3.277
+      },
+      "sar_delta_vv_db": {
+        "min": -12.201,
+        "max": 3.006,
+        "mean": -1.192,
+        "std": 2.685
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.872,
+        "max": -2.777,
+        "mean": -7.001,
+        "std": 0.36
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2019_07_amur__svobodny": {
+    "pair_id": "flood_2019_07_amur__svobodny",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.553,
+        "max": -8.986,
+        "mean": -12.4,
+        "std": 2.275
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.52,
+        "max": -16.187,
+        "mean": -19.4,
+        "std": 2.285
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -21.939,
+        "max": -9.464,
+        "mean": -13.586,
+        "std": 3.28
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.936,
+        "max": -15.616,
+        "mean": -20.584,
+        "std": 3.277
+      },
+      "sar_delta_vv_db": {
+        "min": -11.245,
+        "max": 2.429,
+        "mean": -1.186,
+        "std": 2.683
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.11,
+        "max": -2.694,
+        "mean": -6.998,
+        "std": 0.362
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2021_06_amur__blagoveshchensk": {
+    "pair_id": "flood_2021_06_amur__blagoveshchensk",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.995,
+        "max": -8.439,
+        "mean": -12.403,
+        "std": 2.276
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.948,
+        "max": -16.197,
+        "mean": -19.4,
+        "std": 2.282
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.919,
+        "max": -9.14,
+        "mean": -13.59,
+        "std": 3.277
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -28.851,
+        "max": -16.088,
+        "mean": -20.586,
+        "std": 3.274
+      },
+      "sar_delta_vv_db": {
+        "min": -12.071,
+        "max": 3.04,
+        "mean": -1.187,
+        "std": 2.689
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.214,
+        "max": -2.174,
+        "mean": -6.996,
+        "std": 0.357
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2021_06_amur__konstantinovka": {
+    "pair_id": "flood_2021_06_amur__konstantinovka",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.867,
+        "max": -9.264,
+        "mean": -12.402,
+        "std": 2.277
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.48,
+        "max": -15.642,
+        "mean": -19.398,
+        "std": 2.281
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.303,
+        "max": -8.785,
+        "mean": -13.593,
+        "std": 3.279
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.081,
+        "max": -16.343,
+        "mean": -20.582,
+        "std": 3.276
+      },
+      "sar_delta_vv_db": {
+        "min": -11.054,
+        "max": 3.091,
+        "mean": -1.191,
+        "std": 2.696
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.332,
+        "max": -2.118,
+        "mean": -6.989,
+        "std": 0.358
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2021_06_amur__poyarkovo": {
+    "pair_id": "flood_2021_06_amur__poyarkovo",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.667,
+        "max": -8.264,
+        "mean": -12.408,
+        "std": 2.286
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.385,
+        "max": -15.394,
+        "mean": -19.405,
+        "std": 2.275
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.229,
+        "max": -9.335,
+        "mean": -13.591,
+        "std": 3.271
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.186,
+        "max": -16.445,
+        "mean": -20.584,
+        "std": 3.273
+      },
+      "sar_delta_vv_db": {
+        "min": -12.121,
+        "max": 2.65,
+        "mean": -1.182,
+        "std": 2.691
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -11.507,
+        "max": -2.519,
+        "mean": -6.993,
+        "std": 0.36
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "flood_2021_08_zeya__svobodny": {
+    "pair_id": "flood_2021_08_zeya__svobodny",
+    "tensor_shape": [
+      15,
+      400,
+      400
+    ],
+    "tiles_count": 4,
+    "tile_shape": [
+      15,
+      256,
+      256
+    ],
+    "is_optical_valid": true,
+    "cloud_fraction": 0.0,
+    "channel_statistics": {
+      "sar_vv_pre_filtered_db": {
+        "min": -22.914,
+        "max": -8.86,
+        "mean": -12.406,
+        "std": 2.275
+      },
+      "sar_vh_pre_filtered_db": {
+        "min": -29.708,
+        "max": -14.398,
+        "mean": -19.399,
+        "std": 2.273
+      },
+      "sar_vv_peak_filtered_db": {
+        "min": -22.473,
+        "max": -8.834,
+        "mean": -13.592,
+        "std": 3.277
+      },
+      "sar_vh_peak_filtered_db": {
+        "min": -29.231,
+        "max": -16.082,
+        "mean": -20.591,
+        "std": 3.273
+      },
+      "sar_delta_vv_db": {
+        "min": -11.644,
+        "max": 2.991,
+        "mean": -1.186,
+        "std": 2.692
+      },
+      "sar_ratio_vh_vv_db": {
+        "min": -12.052,
+        "max": -1.328,
+        "mean": -6.999,
+        "std": 0.361
+      },
+      "optics_mndwi": {
+        "min": -0.286,
+        "max": 0.913,
+        "mean": -0.046,
+        "std": 0.48
+      },
+      "optics_ndwi": {
+        "min": -0.556,
+        "max": 0.76,
+        "mean": -0.292,
+        "std": 0.526
+      },
+      "optics_ndvi": {
+        "min": -0.25,
+        "max": 0.489,
+        "mean": 0.341,
+        "std": 0.296
+      },
+      "optics_aweish": {
+        "min": -0.545,
+        "max": 0.49,
+        "mean": -0.338,
+        "std": 0.414
+      },
+      "optics_cloud_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "terrain_slope_deg": {
+        "min": 0.0,
+        "max": 7.641,
+        "mean": 6.695,
+        "std": 1.912
+      },
+      "terrain_hand_prior": {
+        "min": 0.0,
+        "max": 0.982,
+        "mean": 0.149,
+        "std": 0.327
+      },
+      "terrain_perm_water_mask": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.075,
+        "std": 0.263
+      },
+      "terrain_builtup_mask": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  }
+}
