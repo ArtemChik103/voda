@@ -71,7 +71,7 @@ def test_report_endpoints():
     resp_html = client.get("/api/v1/pairs/flood_2019_07_amur__belogorsk/report/html")
     assert resp_html.status_code == 200
     assert "text/html" in resp_html.headers["content-type"]
-    assert "Оперативный сводный гидрологический отчет" in resp_html.text
+    assert "ЦЕНТР УПРАВЛЕНИЯ В КРИЗИСНЫХ СИТУАЦИЯХ" in resp_html.text
 
 
 def test_landcover_breakdown():
