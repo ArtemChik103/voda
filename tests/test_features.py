@@ -25,6 +25,7 @@ from src.features.terrain import (
     create_permanent_water_mask,
     create_builtup_mask,
     extract_aux_feature_stack,
+    load_and_resample_aux,
 )
 from src.features.tiling import (
     create_2d_hann_window,
@@ -35,6 +36,16 @@ from src.features.pipeline import (
     assemble_multimodal_tensor,
     FEATURE_CHANNEL_NAMES,
 )
+from src.features.weather import (
+    parse_era5_daily,
+    compute_antecedent_precipitation_index,
+    compute_window_api,
+    assess_weather_flood_risk,
+    extract_event_weather_features,
+    batch_extract_pair_weather,
+)
+from pathlib import Path
+import pandas as pd
 
 
 def test_lee_filter_variance_reduction():
@@ -218,3 +229,155 @@ def test_multimodal_tensor_assembly():
     assert meta["is_optical_valid"] is True
     assert meta["cloud_fraction"] == 0.0
     assert len(FEATURE_CHANNEL_NAMES) == 15
+
+
+def test_load_and_resample_aux_synthetic():
+    """Bilinear and nearest neighbor resampling of 6-channel AUX array."""
+    # Synthetic 6-band source at 30m resolution (shape: 6, 20, 20)
+    src_aux = np.zeros((6, 20, 20), dtype=np.float32)
+    src_aux[0, :, :] = 15.0  # slope
+    src_aux[1, :, :] = 5.5   # hand
+    src_aux[2, :, :] = 85.0  # occurrence
+    src_aux[3, :, :] = 6.0   # seasonality
+    src_aux[4, :, :] = 1.0   # max_extent
+    src_aux[5, :10, :10] = 1.0  # builtup
+
+    target_shape = (60, 60)
+    res = load_and_resample_aux(src_aux, target_shape=target_shape)
+
+    assert set(res.keys()) == {"slope", "hand", "occurrence", "seasonality", "max_extent", "builtup"}
+    for name, arr in res.items():
+        assert arr.shape == target_shape
+        assert arr.dtype == np.float32
+
+    # Verify values are preserved after resampling
+    np.testing.assert_allclose(res["slope"], 15.0, atol=1e-3)
+    np.testing.assert_allclose(res["hand"], 5.5, atol=1e-3)
+    # Discrete builtup mask should contain only 0.0 and 1.0
+    unique_builtup = np.unique(res["builtup"])
+    assert all(val in [0.0, 1.0] for val in unique_builtup)
+
+
+def test_load_and_resample_aux_geotiff():
+    """Loads and resamples real AUX GeoTIFF from competition dataset if available."""
+    aux_file = Path("new tz/data/rasters/baseline_2018_09_low/blagoveshchensk/AUX_terrain_gsw.tif")
+    if not aux_file.exists():
+        pytest.skip("AUX GeoTIFF file not present in test environment.")
+
+    target_shape = (368, 448)  # Scaled target grid
+    res = load_and_resample_aux(aux_file, target_shape=target_shape)
+
+    assert res["hand"].shape == target_shape
+    assert res["slope"].shape == target_shape
+    assert res["occurrence"].shape == target_shape
+    assert res["builtup"].shape == target_shape
+    assert res["hand"].min() >= 0.0
+    assert res["slope"].min() >= 0.0
+    assert res["occurrence"].min() >= 0.0
+    assert res["occurrence"].max() <= 100.0
+
+
+def test_multimodal_tensor_with_aux_dict():
+    """assemble_multimodal_tensor properly integrates pre-resampled aux_dict."""
+    h, w = 30, 30
+    s1 = np.full((h, w), -15.0, dtype=np.float32)
+    aux_dict = {
+        "slope": np.full((h, w), 2.0, dtype=np.float32),
+        "hand": np.full((h, w), 3.0, dtype=np.float32),
+        "occurrence": np.full((h, w), 90.0, dtype=np.float32),
+        "builtup": np.zeros((h, w), dtype=np.float32),
+    }
+
+    tensor, meta = assemble_multimodal_tensor(
+        s1_pre_vv=s1,
+        s1_pre_vh=s1,
+        s1_peak_vv=s1,
+        s1_peak_vh=s1,
+        aux_dict=aux_dict,
+    )
+
+    assert tensor.shape == (15, h, w)
+    # Channel 11 is slope_deg
+    np.testing.assert_allclose(tensor[11], 2.0)
+    # Channel 13 is perm_water_mask (occurrence >= 80% -> 1.0)
+    np.testing.assert_allclose(tensor[13], 1.0)
+
+
+def test_parse_era5_daily(tmp_path):
+    """parse_era5_daily properly formats dates and clips negative values."""
+    csv_file = tmp_path / "test_era5.csv"
+    csv_file.write_text("date,precip_mm,temp_c,snowmelt_mm\n2020-07-02,5.2,21.0,0.0\n2020-07-01,-1.0,20.5,0.0\n")
+
+    df = parse_era5_daily(csv_file)
+    assert len(df) == 2
+    # Chronological sort
+    assert df["date"].iloc[0] == pd.Timestamp("2020-07-01")
+    assert df["date"].iloc[1] == pd.Timestamp("2020-07-02")
+    # Negative precip must be clipped to 0
+    assert df["precip_mm"].iloc[0] == 0.0
+    assert df["precip_mm"].iloc[1] == 5.2
+
+
+def test_compute_antecedent_precipitation_index():
+    """API decays exponentially during dry periods and increments on rain."""
+    precip = np.array([0.0, 10.0, 0.0, 0.0], dtype=np.float32)
+    api = compute_antecedent_precipitation_index(precip, decay_factor=0.85)
+
+    assert api[0] == 0.0
+    assert api[1] == 10.0
+    assert pytest.approx(api[2], abs=1e-4) == 8.5
+    assert pytest.approx(api[3], abs=1e-4) == 7.225
+
+
+def test_extract_event_weather_features():
+    """extract_event_weather_features correctly computes sliding windows and risk."""
+    dates = pd.date_range("2020-07-01", periods=10, freq="D")
+    precips = [0.0, 1.0, 2.0, 0.0, 5.0, 10.0, 20.0, 30.0, 15.0, 5.0]
+    temps = [20.0] * 10
+    snowmelts = [0.0] * 10
+
+    df = pd.DataFrame({"date": dates, "precip_mm": precips, "temp_c": temps, "snowmelt_mm": snowmelts})
+    peak_date = "2020-07-08"  # index 7 (precip = 30.0)
+
+    feat = extract_event_weather_features(df, peak_date=peak_date)
+
+    assert feat["peak_date"] == "2020-07-08"
+    assert feat["precip_1d_mm"] == 30.0
+    # 3-day window: indices 5, 6, 7 -> 10 + 20 + 30 = 60.0
+    assert feat["precip_3d_sum_mm"] == 60.0
+    # 7-day window: indices 1 to 7 -> 1+2+0+5+10+20+30 = 68.0
+    assert feat["precip_7d_sum_mm"] == 68.0
+    assert feat["temp_mean_7d_c"] == 20.0
+    assert feat["api_7d_mm"] > 30.0
+    assert feat["weather_risk_level"] in ["HIGH", "EXTREME"]
+
+
+def test_assess_weather_flood_risk():
+    """assess_weather_flood_risk assigns monotonic risk tiers."""
+    r_low = assess_weather_flood_risk(5.0, 3.0)
+    r_mod = assess_weather_flood_risk(25.0, 15.0)
+    r_high = assess_weather_flood_risk(55.0, 35.0)
+    r_ext = assess_weather_flood_risk(110.0, 70.0)
+
+    assert r_low["level"] == "LOW"
+    assert r_mod["level"] == "MODERATE"
+    assert r_high["level"] == "HIGH"
+    assert r_ext["level"] == "EXTREME"
+    assert r_low["score"] < r_mod["score"] < r_high["score"] < r_ext["score"]
+
+
+def test_batch_extract_pair_weather_real():
+    """batch_extract_pair_weather extracts valid features for competition pairs."""
+    rasters_dir = Path("new tz/data/rasters")
+    if not rasters_dir.exists():
+        pytest.skip("new tz/data/rasters directory not found")
+
+    from scripts.eda import PAIR_CATALOGUE
+    batch = batch_extract_pair_weather(rasters_dir, PAIR_CATALOGUE)
+
+    assert len(batch) == 11
+    for pid, wfeat in batch.items():
+        assert "precip_7d_sum_mm" in wfeat
+        assert "api_7d_mm" in wfeat
+        assert "weather_risk_level" in wfeat
+        assert wfeat["precip_7d_sum_mm"] >= 0.0

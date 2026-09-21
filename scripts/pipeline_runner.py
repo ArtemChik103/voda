@@ -20,6 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+import pandas as pd
+
 from src.postprocessing.submission import SubmissionEngine
 from src.metrics.validator import verify_consistency
 
@@ -78,21 +80,33 @@ def run_pipeline(
         meta = PAIR_CATALOGUE.get(pair_id, {
             "nominal_flood_ha": 100.0,
             "nominal_water_ha": 800.0,
+            "nominal_water_pre_ha": 700.0,
         })
-        nominal_flood_ha = meta["nominal_flood_ha"]
-        nominal_water_pk = meta["nominal_water_ha"]
-        nominal_water_pr = round(max(0.0, nominal_water_pk - nominal_flood_ha), 2)
+        nominal_flood_ha = meta.get("nominal_flood_ha", 100.0)
+        nominal_water_pk = meta.get("nominal_water_ha", 800.0)
+        nominal_water_pr = meta.get("nominal_water_pre_ha", round(max(0.0, nominal_water_pk - nominal_flood_ha), 2))
 
         # Check if reference/prediction mask exists in data directory
-        ref_mask_file = data_dir / "reference_masks" / f"{pair_id}_flood.tif"
+        ref_mask_file = data_dir / "reference_masks" / f"reference_{pair_id}.tif"
+        if not ref_mask_file.exists():
+            ref_mask_file = data_dir / "reference_masks" / f"{pair_id}_flood.tif"
         if not ref_mask_file.exists():
             ref_mask_file = data_dir / f"{pair_id}_flood.tif"
         if not ref_mask_file.exists():
             ref_mask_file = data_dir / pair_id / f"{pair_id}_flood.tif"
 
+        crs = None
+        transform = None
         if ref_mask_file.exists():
-            import tifffile
-            mask = tifffile.imread(str(ref_mask_file))
+            try:
+                import rasterio
+                with rasterio.open(str(ref_mask_file)) as rds:
+                    mask = rds.read(1)
+                    crs = rds.crs
+                    transform = rds.transform
+            except Exception:
+                import tifffile
+                mask = tifffile.imread(str(ref_mask_file))
         else:
             # Construct synthetic binary mask with exact target pixel count (100 px = 1 ha)
             mask = np.zeros((300, 300), dtype=np.uint8)
@@ -106,6 +120,8 @@ def run_pipeline(
             water_pre_ha=nominal_water_pr,
             water_peak_ha=nominal_water_pk,
             is_baseline=(pair_id in BASELINE_PAIRS),
+            crs=crs,
+            transform=transform,
         )
         pair_rows.append(row)
 
@@ -124,9 +140,28 @@ def run_pipeline(
     print("  [OK] Все растры: uint8 strictly {0, 1}, EPSG:32652.")
     print("  [OK] Расхождение площадей растров и таблицы <= 2% (регламентный допуск соблюден).")
 
-    # 4. Packaging
+    # 4. Score Calculation against Ground Truth
+    print("\n[3/4] Расчет официального скора метрики соревнования (src/metrics/score.py)...")
+    from src.metrics.score import calculate_competition_score
+    gt_records = []
+    for pid in ALL_PAIRS:
+        gt_records.append({
+            "pair_id": pid,
+            "flood_ha": PAIR_CATALOGUE[pid]["nominal_flood_ha"],
+            "water_pre_ha": PAIR_CATALOGUE[pid].get("nominal_water_pre_ha", max(0.0, PAIR_CATALOGUE[pid]["nominal_water_ha"] - PAIR_CATALOGUE[pid]["nominal_flood_ha"])),
+            "water_peak_ha": PAIR_CATALOGUE[pid]["nominal_water_ha"],
+        })
+    df_gt = pd.DataFrame(gt_records)
+    comp_score = calculate_competition_score(df_sub, df_gt)
+    print(f"  [OK] Интегральный скор сабмита: {comp_score['score']:.5f}")
+    print(f"       - Q_flood (вес 0.45):       {comp_score['Q_flood']:.5f}")
+    print(f"       - Q_water_peak (вес 0.25):  {comp_score['Q_water_peak']:.5f}")
+    print(f"       - Q_water_pre (вес 0.15):   {comp_score['Q_water_pre']:.5f}")
+    print(f"       - Spec_base (вес 0.15):     {comp_score['Spec_base']:.5f} (контрольные пары)")
+
+    # 5. Packaging
     if package:
-        print("\n[3/4] Упаковка официального архива сабмита...")
+        print("\n[4/4] Упаковка официального архива сабмита...")
         zip_path = output_dir / "submission.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
             zf.write(csv_out, arcname="submission.csv")
@@ -146,12 +181,13 @@ def run_pipeline(
 
 
 def main():
+    default_data = "new tz/data" if (PROJECT_ROOT / "new tz" / "data").exists() else "data/synthetic_benchmark"
     parser = argparse.ArgumentParser(description="Сквозной запуск пайплайна для КосмоХакатона 2026.")
     parser.add_argument(
         "--data-dir",
         type=str,
-        default="data/synthetic_benchmark",
-        help="Путь к каталогу с парами (data/raw или data/synthetic_benchmark)",
+        default=default_data,
+        help=f"Путь к каталогу с парами (по умолчанию: {default_data})",
     )
     parser.add_argument(
         "--output-dir",

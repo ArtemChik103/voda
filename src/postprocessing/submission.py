@@ -8,7 +8,7 @@ Enforces:
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 import tifffile
@@ -37,6 +37,8 @@ class SubmissionEngine:
         water_pre_ha: float,
         water_peak_ha: float,
         is_baseline: bool = False,
+        crs: Optional[Any] = None,
+        transform: Optional[Any] = None,
     ) -> Dict[str, Union[float, str]]:
         """Processes a single pair's prediction, applies calibration, saves GeoTIFF, and returns CSV row."""
         mask = flood_mask.astype(np.uint8)
@@ -53,7 +55,26 @@ class SubmissionEngine:
 
         # Save GeoTIFF mask
         tif_path = self.output_dir / f"{pair_id}_flood.tif"
-        tifffile.imwrite(str(tif_path), mask)
+        if crs is not None and transform is not None:
+            try:
+                import rasterio
+                with rasterio.open(
+                    str(tif_path),
+                    "w",
+                    driver="GTiff",
+                    height=mask.shape[0],
+                    width=mask.shape[1],
+                    count=1,
+                    dtype=np.uint8,
+                    crs=crs,
+                    transform=transform,
+                    compress="deflate",
+                ) as dst:
+                    dst.write(mask, 1)
+            except Exception:
+                tifffile.imwrite(str(tif_path), mask)
+        else:
+            tifffile.imwrite(str(tif_path), mask)
 
         return {
             "pair_id": pair_id,

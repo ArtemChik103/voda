@@ -7,9 +7,10 @@ Implements:
 4. Urban built-up and road infrastructure suppression.
 """
 
-from typing import Optional, Tuple
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
-from scipy.ndimage import sobel
+from scipy.ndimage import sobel, zoom
 
 
 def compute_logistic_hand_prior(
@@ -134,3 +135,107 @@ def extract_aux_feature_stack(
     ], axis=0).astype(np.float32)
 
     return stack
+
+
+def load_and_resample_aux(
+    aux_source: Union[str, Path, np.ndarray],
+    target_shape: Tuple[int, int],
+    target_transform: Optional[Any] = None,
+    target_crs: Optional[Any] = None,
+) -> Dict[str, np.ndarray]:
+    """Reads 6-channel AUX_terrain_gsw stack (30m) and resamples to target 10m grid.
+
+    Bands:
+        1: slope (Copernicus DEM GLO-30) - continuous -> bilinear resampling
+        2: hand (MERIT Hydro) - continuous -> bilinear resampling
+        3: occurrence (JRC GSW v1.4) - percentage [0, 100] -> nearest neighbor
+        4: seasonality (JRC GSW v1.4) - months [0, 12] -> nearest neighbor
+        5: max_extent (JRC GSW v1.4) - binary [0, 1] -> nearest neighbor
+        6: builtup (ESA WorldCover) - binary [0, 1] -> nearest neighbor
+
+    Args:
+        aux_source: Path to AUX_terrain_gsw.tif or in-memory 3D array of shape (6, H_src, W_src).
+        target_shape: Target (H, W) grid dimensions.
+        target_transform: Affine transform of target 10m grid. If None, derived from source bounds.
+        target_crs: Target coordinate reference system.
+
+    Returns:
+        Dict mapping band names to 2D numpy arrays (H, W) of float32.
+    """
+    H_tgt, W_tgt = target_shape
+
+    # Branch 1: In-memory numpy array (shape: 6, H_src, W_src)
+    if isinstance(aux_source, np.ndarray):
+        if aux_source.ndim != 3 or aux_source.shape[0] < 6:
+            raise ValueError(f"Expected aux_source array with shape (6, H, W), got {aux_source.shape}")
+        
+        H_src, W_src = aux_source.shape[1], aux_source.shape[2]
+        zoom_factors = (H_tgt / H_src, W_tgt / W_src)
+
+        band_specs = [
+            ("slope", 0, 1, 0.0, 90.0),
+            ("hand", 1, 1, 0.0, 5000.0),
+            ("occurrence", 2, 0, 0.0, 100.0),
+            ("seasonality", 3, 0, 0.0, 12.0),
+            ("max_extent", 4, 0, 0.0, 1.0),
+            ("builtup", 5, 0, 0.0, 1.0),
+        ]
+        resampled = {}
+        for name, c_idx, order, val_min, val_max in band_specs:
+            arr_zoom = zoom(aux_source[c_idx].astype(np.float32), zoom_factors, order=order)
+            if arr_zoom.shape != target_shape:
+                cur_h, cur_w = arr_zoom.shape
+                cropped = np.zeros(target_shape, dtype=np.float32)
+                h_end = min(cur_h, H_tgt)
+                w_end = min(cur_w, W_tgt)
+                cropped[:h_end, :w_end] = arr_zoom[:h_end, :w_end]
+                arr_zoom = cropped
+            arr_zoom = np.nan_to_num(arr_zoom, nan=val_min, posinf=val_max, neginf=val_min)
+            arr_zoom = np.clip(arr_zoom, val_min, val_max)
+            resampled[name] = arr_zoom.astype(np.float32)
+        return resampled
+
+    # Branch 2: Filepath (GeoTIFF)
+    aux_path = Path(aux_source)
+    if not aux_path.exists():
+        raise FileNotFoundError(f"AUX file not found: {aux_path}")
+
+    import rasterio
+    from rasterio.warp import reproject, Resampling
+    from rasterio.transform import from_bounds
+
+    with rasterio.open(str(aux_path)) as src:
+        dst_crs = target_crs if target_crs is not None else src.crs
+        dst_transform = target_transform
+        if dst_transform is None:
+            dst_transform = from_bounds(
+                src.bounds.left, src.bounds.bottom, src.bounds.right, src.bounds.top,
+                W_tgt, H_tgt
+            )
+
+        band_specs = [
+            ("slope", 1, Resampling.bilinear, 0.0, 90.0),
+            ("hand", 2, Resampling.bilinear, 0.0, 5000.0),
+            ("occurrence", 3, Resampling.nearest, 0.0, 100.0),
+            ("seasonality", 4, Resampling.nearest, 0.0, 12.0),
+            ("max_extent", 5, Resampling.nearest, 0.0, 1.0),
+            ("builtup", 6, Resampling.nearest, 0.0, 1.0),
+        ]
+
+        resampled = {}
+        for name, b_idx, resampling_mode, val_min, val_max in band_specs:
+            dst_arr = np.zeros(target_shape, dtype=np.float32)
+            reproject(
+                source=rasterio.band(src, b_idx),
+                destination=dst_arr,
+                src_transform=src.transform,
+                src_crs=src.crs,
+                dst_transform=dst_transform,
+                dst_crs=dst_crs,
+                resampling=resampling_mode,
+            )
+            dst_arr = np.nan_to_num(dst_arr, nan=val_min, posinf=val_max, neginf=val_min)
+            dst_arr = np.clip(dst_arr, val_min, val_max)
+            resampled[name] = dst_arr.astype(np.float32)
+
+        return resampled

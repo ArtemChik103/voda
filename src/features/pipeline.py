@@ -6,12 +6,13 @@ Assembles the 15-channel feature tensor combining:
 - Auxiliary layers (4 channels: Slope, Logistic HAND Prior, Permanent Water, Built-up)
 """
 
-from typing import Dict, Optional, Tuple, Union
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
 
 from src.features.sar import extract_sar_feature_stack
 from src.features.optics import extract_optical_feature_stack
-from src.features.terrain import extract_aux_feature_stack
+from src.features.terrain import extract_aux_feature_stack, load_and_resample_aux
 
 
 FEATURE_CHANNEL_NAMES = [
@@ -50,6 +51,8 @@ def assemble_multimodal_tensor(
     dem_or_slope: Optional[np.ndarray] = None,
     gsw_occurrence_pct: Optional[np.ndarray] = None,
     builtup_layer: Optional[np.ndarray] = None,
+    aux_path: Optional[Union[str, Path]] = None,
+    aux_dict: Optional[Dict[str, np.ndarray]] = None,
     # Processing options
     filter_sar_speckle: bool = True,
     speckle_window_size: int = 7,
@@ -66,6 +69,8 @@ def assemble_multimodal_tensor(
         dem_or_slope: Copernicus DEM in meters or pre-computed slope.
         gsw_occurrence_pct: JRC Global Surface Water occurrence raster (0-100%).
         builtup_layer: ESA WorldCover or built-up layer.
+        aux_path: Optional path to 6-band AUX_terrain_gsw.tif (will be resampled to 10m).
+        aux_dict: Optional pre-resampled dictionary from load_and_resample_aux.
         filter_sar_speckle: Whether to apply the adaptive Lee filter.
         speckle_window_size: Window dimension for the Lee filter.
         is_slope_already: True if dem_or_slope is already slope in degrees.
@@ -103,15 +108,26 @@ def assemble_multimodal_tensor(
         cloud_frac = 1.0
 
     # 3. Auxiliary Branch (4 channels)
-    hand = hand_meters if hand_meters is not None else np.zeros((h, w), dtype=np.float32)
-    dem = dem_or_slope if dem_or_slope is not None else np.zeros((h, w), dtype=np.float32)
-    gsw = gsw_occurrence_pct if gsw_occurrence_pct is not None else np.zeros((h, w), dtype=np.float32)
+    if aux_path is not None and aux_dict is None:
+        aux_dict = load_and_resample_aux(aux_path, target_shape=(h, w))
+
+    if aux_dict is not None:
+        hand = aux_dict.get("hand", np.zeros((h, w), dtype=np.float32))
+        dem = aux_dict.get("slope", np.zeros((h, w), dtype=np.float32))
+        gsw = aux_dict.get("occurrence", np.zeros((h, w), dtype=np.float32))
+        builtup = aux_dict.get("builtup", np.zeros((h, w), dtype=np.float32))
+        is_slope_already = True
+    else:
+        hand = hand_meters if hand_meters is not None else np.zeros((h, w), dtype=np.float32)
+        dem = dem_or_slope if dem_or_slope is not None else np.zeros((h, w), dtype=np.float32)
+        gsw = gsw_occurrence_pct if gsw_occurrence_pct is not None else np.zeros((h, w), dtype=np.float32)
+        builtup = builtup_layer
 
     aux_stack = extract_aux_feature_stack(
         dem_or_slope=dem,
         hand_meters=hand,
         gsw_occurrence_pct=gsw,
-        builtup_layer=builtup_layer,
+        builtup_layer=builtup,
         is_slope_already=is_slope_already,
     )
 

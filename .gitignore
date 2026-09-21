@@ -45,3 +45,10 @@ Thumbs.db
 # macOS metadata
 __MACOSX/
 ._*
+
+# Test screenshots, temporary debug renders and OCR dumps
+reports/e2e_screenshots/
+reports/pdf_render_test/
+*.tmp
+new tz/*_raw.txt
+new tz/criteria_diff.txt

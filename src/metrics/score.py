@@ -46,20 +46,20 @@ THRESHOLD_WATER_HA: float = 200.0
 # Tolerance fraction for baseline false positives (0.5% of AOI area)
 BASELINE_MAX_FRACTION: float = 0.005
 
-# Nominal AOI areas in hectares if not provided via raster/metadata
-# (at 10 m resolution, 3500x3500 px = 12,250,000 px = 122,500 ha = 1225 km^2)
+# Official AOI areas in hectares from dataset reference masks
+# (Exact values derived from 10 m resolution masks in EPSG:32652)
 DEFAULT_AOI_AREAS_HA: Dict[str, float] = {
-    "baseline_2018_09_low__blagoveshchensk": 122500.0,
-    "baseline_2018_09_low__konstantinovka": 122500.0,
-    "baseline_2018_09_low__svobodny": 122500.0,
-    "flood_2019_07_amur__belogorsk": 122500.0,
-    "flood_2019_07_amur__blagoveshchensk": 122500.0,
-    "flood_2019_07_amur__konstantinovka": 122500.0,
-    "flood_2019_07_amur__svobodny": 122500.0,
-    "flood_2021_06_amur__blagoveshchensk": 122500.0,
-    "flood_2021_06_amur__konstantinovka": 122500.0,
-    "flood_2021_06_amur__poyarkovo": 122500.0,
-    "flood_2021_08_zeya__svobodny": 122500.0,
+    "baseline_2018_09_low__blagoveshchensk": 164916.78,
+    "baseline_2018_09_low__konstantinovka": 123544.96,
+    "baseline_2018_09_low__svobodny": 132896.50,
+    "flood_2019_07_amur__belogorsk": 91385.13,
+    "flood_2019_07_amur__blagoveshchensk": 164916.78,
+    "flood_2019_07_amur__konstantinovka": 123544.96,
+    "flood_2019_07_amur__svobodny": 132896.50,
+    "flood_2021_06_amur__blagoveshchensk": 164916.78,
+    "flood_2021_06_amur__konstantinovka": 123544.96,
+    "flood_2021_06_amur__poyarkovo": 109070.60,
+    "flood_2021_08_zeya__svobodny": 129790.03,
 }
 
 

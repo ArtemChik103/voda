@@ -7,6 +7,10 @@ import torch
 from src.models.physical import (
     calculate_otsu_threshold,
     PhysicalHydrologyModel,
+    filter_urban_false_alarms,
+    filter_permanent_water_gsw,
+    filter_waterlogged_cropland,
+    filter_dry_sandbars,
 )
 from src.models.deep_learning import (
     MultiModalHydrologyNet,
@@ -135,3 +139,117 @@ def test_inference_engine_end_to_end():
     assert res["flood_mask"].shape == (h, w)
     assert res["flood_ha"] <= res["water_peak_ha"]
     assert res["flood_mask"].dtype == np.uint8
+
+
+def test_trap_airport_builtup_filter():
+    """Airport runway with low backscatter and high HAND is eliminated."""
+    h, w = 40, 40
+    raw_flood = np.ones((h, w), dtype=np.uint8)
+    builtup = np.zeros((h, w), dtype=np.float32)
+    hand = np.zeros((h, w), dtype=np.float32)
+
+    # Place airport runway in top half (builtup = 1, HAND = 18m)
+    builtup[:20, :] = 1.0
+    hand[:20, :] = 18.0
+
+    # Low floodplain in bottom half (builtup = 0, HAND = 2m)
+    hand[20:, :] = 2.0
+
+    filtered, trap = filter_urban_false_alarms(raw_flood, builtup, hand, airport_hand_threshold_m=12.0)
+    assert np.all(filtered[:20, :] == 0)   # Airport eliminated
+    assert np.all(filtered[20:, :] == 1)   # Floodplain preserved
+    assert np.sum(trap) == 20 * 40
+
+
+def test_trap_oxbow_lake_permanent_water():
+    """Oxbow lake with GSW occurrence >= 80% is excluded from new flood."""
+    h, w = 30, 30
+    raw_flood = np.ones((h, w), dtype=np.uint8)
+    occurrence = np.zeros((h, w), dtype=np.float32)
+
+    # Oxbow lake patch
+    occurrence[10:20, 10:20] = 88.0
+
+    filtered, trap = filter_permanent_water_gsw(raw_flood, occurrence, occurrence_threshold_pct=80.0)
+    assert np.all(filtered[10:20, 10:20] == 0)
+    assert np.sum(filtered) == (30 * 30) - (10 * 10)
+    assert np.sum(trap) == 100
+
+
+def test_trap_waterlogged_cropland():
+    """Saturated agricultural soil (moderate MNDWI, high NDVI) is filtered out."""
+    h, w = 20, 20
+    raw_flood = np.ones((h, w), dtype=np.uint8)
+
+    # Saturated field: MNDWI=0.10, NDVI=0.35, small drop delta_vv=-1.5 dB
+    mndwi = np.full((h, w), 0.10, dtype=np.float32)
+    ndvi = np.full((h, w), 0.35, dtype=np.float32)
+    delta_vv = np.full((h, w), -1.5, dtype=np.float32)
+
+    # Genuine flood in lower half: MNDWI=0.25, NDVI=0.05, delta_vv=-5.0 dB
+    mndwi[10:, :] = 0.25
+    ndvi[10:, :] = 0.05
+    delta_vv[10:, :] = -5.0
+
+    filtered, trap = filter_waterlogged_cropland(
+        raw_flood, mndwi, ndvi, delta_vv,
+        mndwi_water_threshold=0.15,
+        ndvi_cropland_threshold=0.20,
+        delta_vv_min_drop_db=-3.5,
+    )
+    assert np.all(filtered[:10, :] == 0)  # Cropland excluded
+    assert np.all(filtered[10:, :] == 1)  # Genuine flood preserved
+
+
+def test_trap_dry_sandbars():
+    """Dry quartz sand (max_extent=0, HAND>8m, or high B04 with negative MNDWI) is filtered."""
+    h, w = 20, 20
+    raw_flood = np.ones((h, w), dtype=np.uint8)
+    max_extent = np.zeros((h, w), dtype=np.float32)
+    hand = np.full((h, w), 10.0, dtype=np.float32)
+
+    # Historical flood zone in bottom half
+    max_extent[10:, :] = 1.0
+
+    filtered, trap = filter_dry_sandbars(raw_flood, max_extent, hand, sandbar_hand_threshold_m=8.0)
+    assert np.all(filtered[:10, :] == 0)  # Dry sand excluded
+    assert np.all(filtered[10:, :] == 1)  # Real flood zone preserved
+
+
+def test_physical_model_with_traps_integrated():
+    """PhysicalHydrologyModel properly runs all trap filters and returns trap_stats."""
+    h, w = 60, 60
+    model = PhysicalHydrologyModel()
+
+    s1_pre = np.full((h, w), -12.0, dtype=np.float32)
+    s1_peak = np.full((h, w), -22.0, dtype=np.float32)
+    hand = np.full((h, w), 2.0, dtype=np.float32)
+    perm_water = np.zeros((h, w), dtype=np.uint8)
+
+    # Add airport trap in upper-left (builtup=1, HAND=15)
+    builtup = np.zeros((h, w), dtype=np.float32)
+    builtup[:15, :15] = 1.0
+    hand[:15, :15] = 15.0
+
+    # Add oxbow lake in upper-right (GSW occurrence = 95%)
+    gsw_occ = np.zeros((h, w), dtype=np.float32)
+    gsw_occ[:15, 45:] = 95.0
+
+    res = model.detect_flood(
+        s1_pre_vv_db=s1_pre,
+        s1_pre_vh_db=s1_pre - 6.0,
+        s1_peak_vv_db=s1_peak,
+        s1_peak_vh_db=s1_peak - 6.0,
+        hand_meters=hand,
+        perm_water_mask=perm_water,
+        builtup_mask=builtup,
+        gsw_occurrence_pct=gsw_occ,
+        weather_features={"weather_risk_level": "HIGH", "precip_7d_sum_mm": 65.0},
+    )
+
+    assert "trap_stats" in res
+    assert res["flood_ha"] > 0.0
+    # Airport runway pixels must be 0 in flood mask
+    assert np.all(res["flood_mask"][:15, :15] == 0)
+    # Oxbow lake pixels must be 0 in flood mask
+    assert np.all(res["flood_mask"][:15, 45:] == 0)

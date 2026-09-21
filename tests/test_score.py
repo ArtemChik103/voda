@@ -119,3 +119,37 @@ def test_competition_score_weights():
     res = calculate_competition_score(df_sub, df_gt)
     expected_score = 0.45 * 0.8 + 0.25 * 0.9 + 0.15 * 0.8 + 0.15 * 1.0
     assert pytest.approx(res["score"], abs=1e-4) == expected_score
+
+
+def test_official_aoi_areas_and_spec_base():
+    """DEFAULT_AOI_AREAS_HA must cover all official 11 pairs with realistic geometries."""
+    from src.metrics.score import DEFAULT_AOI_AREAS_HA
+    assert len(DEFAULT_AOI_AREAS_HA) == 11
+    for pair in ALL_PAIRS:
+        assert pair in DEFAULT_AOI_AREAS_HA
+        area = DEFAULT_AOI_AREAS_HA[pair]
+        assert 80000.0 <= area <= 180000.0
+
+    # Test baseline tolerance with default areas
+    df_true = pd.DataFrame({"pair_id": BASELINE_PAIRS, "flood_ha": [0.0, 0.0, 0.0]})
+    df_pred_perfect = pd.DataFrame({"pair_id": BASELINE_PAIRS, "flood_ha": [0.0, 0.0, 0.0]})
+    spec_base_perfect, _ = calculate_spec_base(df_pred_perfect, df_true)
+    assert spec_base_perfect == 1.0
+
+    # With small excess (e.g. 50, 40, 30 ha), spec_base should decrease gracefully
+    df_pred_small = pd.DataFrame({"pair_id": BASELINE_PAIRS, "flood_ha": [50.0, 40.0, 30.0]})
+    spec_base_small, _ = calculate_spec_base(df_pred_small, df_true)
+    assert 0.90 < spec_base_small < 1.0
+
+
+def test_dynamic_catalogue_real_dataset():
+    """scripts.eda.PAIR_CATALOGUE must reflect the actual 11 competition pairs and reference statistics."""
+    from scripts.eda import PAIR_CATALOGUE
+    assert len(PAIR_CATALOGUE) == 11
+    for pair in ALL_PAIRS:
+        assert pair in PAIR_CATALOGUE
+        entry = PAIR_CATALOGUE[pair]
+        assert "aoi_ha" in entry
+        assert "nominal_flood_ha" in entry
+        assert "nominal_water_ha" in entry
+        assert entry["aoi_ha"] > 50000.0

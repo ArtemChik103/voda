@@ -1,0 +1,31 @@
+{
+  "benchmark_timestamp": "2026-09-21T14:44:04Z",
+  "configuration": {
+    "total_requests": 120,
+    "concurrency_workers": 20,
+    "target_pair_id": "flood_2019_07_amur__blagoveshchensk",
+    "endpoints_tested_count": 8
+  },
+  "throughput": {
+    "total_time_seconds": 0.093,
+    "requests_per_second": 1286.6,
+    "successful_requests": 120,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0
+  },
+  "latency_ms": {
+    "min_ms": 7.09,
+    "avg_ms": 14.07,
+    "p50_ms": 12.37,
+    "p90_ms": 21.09,
+    "p95_ms": 26.5,
+    "p99_ms": 31.23,
+    "max_ms": 34.39
+  },
+  "memory_mb": {
+    "ram_before_mb": 134.4,
+    "ram_after_mb": 138.2,
+    "ram_delta_mb": 3.8
+  },
+  "assessment": "EXCELLENT"
+}

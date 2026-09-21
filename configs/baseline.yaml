@@ -43,7 +43,27 @@ evaluation:
     spec_base: 0.15
 
 paths:
-  data_dir: "data"
+  data_dir: "new tz/data"
+  fallback_data_dir: "data/synthetic_benchmark"
   reports_dir: "reports"
-  predictions_dir: "predictions"
-  sample_submission: "task/sample_submission.csv"
+  predictions_dir: "output/predictions"
+  pairs_csv: "new tz/data/pairs.csv"
+  sample_submission: "new tz/data/sample_submission.csv"
+  events_catalog: "new tz/data/tables/events_catalog.csv"
+  scene_catalog: "new tz/data/tables/scene_catalog.csv"
+  rasters_dir: "new tz/data/rasters"
+  reference_masks_dir: "new tz/data/reference_masks"
+  vectors_dir: "new tz/data/vectors"
+
+aoi_areas_ha:
+  baseline_2018_09_low__blagoveshchensk: 164916.78
+  baseline_2018_09_low__konstantinovka: 123544.96
+  baseline_2018_09_low__svobodny: 132896.50
+  flood_2019_07_amur__belogorsk: 91385.13
+  flood_2019_07_amur__blagoveshchensk: 164916.78
+  flood_2019_07_amur__konstantinovka: 123544.96
+  flood_2019_07_amur__svobodny: 132896.50
+  flood_2021_06_amur__blagoveshchensk: 164916.78
+  flood_2021_06_amur__konstantinovka: 123544.96
+  flood_2021_06_amur__poyarkovo: 109070.60
+  flood_2021_08_zeya__svobodny: 129790.03

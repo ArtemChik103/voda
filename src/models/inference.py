@@ -4,10 +4,11 @@ Integrates Track A (Deep Learning) and Track B (Physics Baseline) with sliding-w
 Hann tile stitching for memory-bounded high-resolution inference.
 """
 
-from typing import Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
 import torch
 
+from src.features.optics import compute_mndwi, compute_ndvi
 from src.features.pipeline import assemble_multimodal_tensor
 from src.features.tiling import TileStitcher, extract_tiles
 from src.models.physical import PhysicalHydrologyModel
@@ -50,6 +51,8 @@ class HydrologyInferenceEngine:
         perm_water_mask: np.ndarray,
         dem_or_slope: Optional[np.ndarray] = None,
         builtup_layer: Optional[np.ndarray] = None,
+        gsw_occurrence_pct: Optional[np.ndarray] = None,
+        gsw_max_extent: Optional[np.ndarray] = None,
         # Optical inputs
         s2_peak_b03: Optional[np.ndarray] = None,
         s2_peak_b04: Optional[np.ndarray] = None,
@@ -57,11 +60,20 @@ class HydrologyInferenceEngine:
         s2_peak_b11: Optional[np.ndarray] = None,
         s2_scl: Optional[np.ndarray] = None,
         wind_speed_ms: float = 2.0,
-    ) -> Dict[str, Union[np.ndarray, float, str]]:
+        weather_features: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Union[np.ndarray, float, str, Dict[str, int]]]:
         """Executes full-scene prediction returning binary masks and areas in hectares."""
         h, w = s1_peak_vv.shape
 
-        # 1. Physical Expert Track (Track B)
+        # Compute optical indices if bands available
+        mndwi_peak = None
+        ndvi_peak = None
+        if s2_peak_b03 is not None and s2_peak_b11 is not None:
+            mndwi_peak = compute_mndwi(s2_peak_b03, s2_peak_b11)
+        if s2_peak_b04 is not None and s2_peak_b08 is not None:
+            ndvi_peak = compute_ndvi(s2_peak_b04, s2_peak_b08)
+
+        # 1. Physical Expert Track (Track B) with Domain Traps
         phys_result = self.physical_model.detect_flood(
             s1_pre_vv_db=s1_pre_vv,
             s1_pre_vh_db=s1_pre_vh,
@@ -70,6 +82,14 @@ class HydrologyInferenceEngine:
             hand_meters=hand_meters,
             perm_water_mask=perm_water_mask,
             wind_speed_ms=wind_speed_ms,
+            mndwi_peak=mndwi_peak,
+            cloud_mask_peak=None,
+            builtup_mask=builtup_layer,
+            gsw_occurrence_pct=gsw_occurrence_pct,
+            gsw_max_extent=gsw_max_extent,
+            ndvi_peak=ndvi_peak,
+            b04_red_peak=s2_peak_b04,
+            weather_features=weather_features,
         )
 
         p_phys_flood = phys_result["flood_mask"].astype(np.float32)

@@ -18,6 +18,10 @@
                     <h1>Вода-Космос</h1>
                     <span>КосмоХакатон 2026 | Sentinel-1 & 2</span>
                 </div>
+                <div class="brand-actions">
+                    <button id="btnSystemInfo" class="btn-brand-info" onclick="openAblationModal()" title="О системе и научно-технической верификации ML-модели">ℹ️</button>
+                    <button id="btnCollapseSidebar" class="btn-brand-collapse" onclick="toggleSidebarCollapse()" title="Свернуть боковую панель в режим Zen [Tab]">◀</button>
+                </div>
             </div>
 
             <!-- Event Selector -->
@@ -30,66 +34,369 @@
 
             <!-- Layer Controls -->
             <div class="control-group">
-                <label>Режим отображения слоев:</label>
+                <label>Режим сопоставления слоев:</label>
                 <div class="button-group">
-                    <button id="btnLayerAll" class="btn btn-mode active" onclick="setLayerMode('all')">Все слои</button>
-                    <button id="btnLayerFlood" class="btn btn-mode" onclick="setLayerMode('flood')">Только паводок</button>
-                    <button id="btnLayerPre" class="btn btn-mode" onclick="setLayerMode('pre')">Вода «до»</button>
+                    <button id="btnLayerAll" class="btn btn-mode active" onclick="setLayerMode('all')">🗺️ Совмещенный вид</button>
+                    <button id="btnLayerSwipe" class="btn btn-mode" onclick="setLayerMode('swipe')">↔️ Шторка До/Пик</button>
                 </div>
             </div>
 
-            <!-- Live Hydrological Metrics -->
-            <div class="metrics-panel">
-                <div class="panel-header">Гидрологический баланс</div>
-                <div class="metric-card highlight">
-                    <div class="metric-title">Новое затопление (Flood)</div>
-                    <div class="metric-value" id="valFloodHa">-- га</div>
-                    <div class="metric-subtitle" id="valFloodKm2">-- км² (--% от AOI)</div>
+            <!-- Hydrological Tools Toolbar -->
+            <div class="control-group">
+                <label>Инженерные инструменты:</label>
+                <div class="button-group" style="flex-wrap: wrap; gap: 4px;">
+                    <button id="btnToggleGauges" class="btn btn-mode active" onclick="toggleGaugeStations()" title="Сеть гидрологических постов Росгидромета с отметками НЯ/ОЯ">📍 Посты</button>
+                    <button id="btnToggleProfile" class="btn btn-mode" onclick="toggleProfileDrawer()" title="Поперечный батиметрический створ речной долины">📊 Створ</button>
+                    <button id="btnToggleTraps" class="btn btn-mode" onclick="toggleTrapsLayer()" title="Полигоны 4 типов физических ловушек (ВПП, старицы, пашня, песок)">🛡️ Ловушки</button>
+                    <button id="btnToggleTimelapse" class="btn btn-mode" onclick="toggleTimelapse()" title="Анимация фаз развития паводка [Space]">⏱️ Таймлапс</button>
+                    <button id="btnToggleEvac" class="btn btn-mode" onclick="toggleEvacuationLayer()" title="План эвакуации, переливы автодорог и безопасные коридоры (ЦУКС МЧС)">🚨 Эвакуация</button>
                 </div>
+            </div>
 
-                <div class="metric-row">
-                    <div class="metric-card">
-                        <div class="metric-title">Вода на пике</div>
-                        <div class="metric-value" id="valPeakHa">-- га</div>
+            <!-- Sidebar Navigation Tabs -->
+            <div class="sidebar-tabs">
+                <button id="tabBtnOverview" class="sidebar-tab active" onclick="switchSidebarTab('overview')">
+                    <span class="tab-icon">📊</span> Оперативная сводка
+                </button>
+                <button id="tabBtnForecast" class="sidebar-tab" onclick="switchSidebarTab('forecast')">
+                    <span class="tab-icon">📈</span> Прогноз и Метео
+                </button>
+            </div>
+
+            <!-- Tab 1: Operational Overview -->
+            <div id="tabContentOverview" class="tab-content active">
+                <!-- Live Hydrological Metrics -->
+                <div class="metrics-panel">
+                    <div class="panel-header">Гидрологический баланс</div>
+                    <div class="metric-card highlight clickable" onclick="focusThreatTarget('flood')" title="Нажмите для центрирования на зоне паводка">
+                        <div class="metric-title" style="display: flex; justify-content: space-between;">
+                            <span>Новое затопление (Flood)</span>
+                            <span class="click-hint" title="Перейти к паводку">🎯</span>
+                        </div>
+                        <div class="metric-value" id="valFloodHa">-- га</div>
+                        <div class="metric-subtitle" id="valFloodKm2">-- км² (--% от AOI)</div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-title">Вода до события</div>
-                        <div class="metric-value" id="valPreHa">-- га</div>
+
+                    <div class="metric-row">
+                        <div class="metric-card">
+                            <div class="metric-title">Вода на пике</div>
+                            <div class="metric-value" id="valPeakHa">-- га</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Вода до события</div>
+                            <div class="metric-value" id="valPreHa">-- га</div>
+                        </div>
+                    </div>
+
+                    <div class="risk-card" id="riskCard">
+                        <div class="risk-title">Оценка гидрологического риска</div>
+                        <div class="risk-badge" id="riskBadge">--</div>
+                        <div class="risk-text" id="riskText">Выберите пару для расчета...</div>
                     </div>
                 </div>
 
-                <div class="risk-card" id="riskCard">
-                    <div class="risk-title">Оценка гидрологического риска</div>
-                    <div class="risk-badge" id="riskBadge">--</div>
-                    <div class="risk-text" id="riskText">Выберите пару для расчета...</div>
+                <!-- Infrastructure Damage Assessment -->
+                <div class="infra-panel">
+                    <div class="panel-header">Оценка ущерба инфраструктуре (ЦУКС МЧС)</div>
+                    <div class="metric-row">
+                        <div class="metric-card clickable" onclick="focusThreatTarget('roads')" title="Нажмите для быстрого перехода к подтопленному участку автодороги">
+                            <div class="metric-title" style="display: flex; justify-content: space-between;">
+                                <span>Подтопление дорог</span>
+                                <span class="click-hint" title="Перейти к переливу трассы">🎯</span>
+                            </div>
+                            <div class="metric-value text-red" id="valInfraRoads">-- км</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Затопление угодий</div>
+                            <div class="metric-value" id="valInfraFarmland">-- га</div>
+                        </div>
+                    </div>
+                    <div class="infra-threat-box clickable" id="infraThreatBox" onclick="focusThreatTarget('settlement')" title="Нажмите для приближения ближайшей зоны застройки">
+                        <div class="infra-threat-label" style="display: flex; justify-content: space-between;">
+                            <span>Угроза населенным пунктам:</span>
+                            <span class="click-hint" title="Перейти к границе поселения">🎯</span>
+                        </div>
+                        <div class="infra-threat-status" id="valInfraThreat">Загрузка...</div>
+                        <div class="infra-dist-sub" id="valInfraDist">Дистанция до застройки: -- м</div>
+                    </div>
+                </div>
+
+                <!-- Operational Actions & Export Menu -->
+                <div class="actions-panel">
+                    <button class="btn btn-primary w-full btn-mchs-action" onclick="openMchsReport()">
+                        📄 Донесение ЦУКС МЧС (А4 печать)
+                    </button>
+                    <div class="export-dropdown-container">
+                        <button id="btnExportDropdown" class="btn btn-secondary w-full btn-export-toggle" onclick="toggleExportMenu()">
+                            <span>💾 Экспорт геоданных</span>
+                            <span class="dropdown-caret">▾</span>
+                        </button>
+                        <div id="exportMenu" class="export-menu" style="display: none;">
+                            <button class="export-menu-item" onclick="exportMapSnapshot()">
+                                <span class="export-icon">📷</span>
+                                <div class="export-text">
+                                    <span class="export-title">Снимок карты для сводки (.png)</span>
+                                    <span class="export-sub">300 DPI картографический снимок</span>
+                                </div>
+                            </button>
+                            <button class="export-menu-item" onclick="exportGeoJSON()">
+                                <span class="export-icon">📥</span>
+                                <div class="export-text">
+                                    <span class="export-title">Векторы GeoJSON (.geojson)</span>
+                                    <span class="export-sub">Полигоны разливов и маски</span>
+                                </div>
+                            </button>
+                            <button class="export-menu-item" onclick="exportShapefile()">
+                                <span class="export-icon">📦</span>
+                                <div class="export-text">
+                                    <span class="export-title">ESRI Shapefile (.shp.zip)</span>
+                                    <span class="export-sub">Архив SHP/SHX/DBF/PRJ</span>
+                                </div>
+                            </button>
+                            <button class="export-menu-item" onclick="exportGeoPackage()">
+                                <span class="export-icon">🗺️</span>
+                                <div class="export-text">
+                                    <span class="export-title">OGC GeoPackage (.gpkg)</span>
+                                    <span class="export-sub">Слой гидропостов и разливов</span>
+                                </div>
+                            </button>
+                            <button class="export-menu-item" onclick="exportKMZ()">
+                                <span class="export-icon">🌍</span>
+                                <div class="export-text">
+                                    <span class="export-title">Google Earth 3D (.kmz)</span>
+                                    <span class="export-sub">3D-модель паводкового зеркала</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Land Cover Breakdown -->
-            <div class="landcover-panel">
-                <div class="panel-header">Затопление по ESA WorldCover</div>
-                <div class="landcover-bars" id="landcoverBars">
-                    <div style="color: #64748b; font-size: 13px;">Загрузка данных покрова...</div>
+            <!-- Tab 2: Modeling & Meteorology -->
+            <div id="tabContentForecast" class="tab-content" style="display: none;">
+                <!-- What-If Hydraulic Forecast Panel -->
+                <div class="whatif-panel">
+                    <div class="panel-header">Гидрологический прогноз What-If (&Delta;H)</div>
+                    <div class="whatif-desc">Сценарное моделирование волны по нормам Росгидромета:</div>
+                    <div class="whatif-btn-row">
+                        <button class="btn-whatif active" data-h="0.0" onclick="applyWhatIf(0.0)">Факт (0 м)</button>
+                        <button class="btn-whatif" data-h="0.5" onclick="applyWhatIf(0.5)">+0.5 м <span class="badge-tag ny">НЯ</span></button>
+                        <button class="btn-whatif" data-h="1.5" onclick="applyWhatIf(1.5)">+1.5 м <span class="badge-tag oy">ОЯ</span></button>
+                        <button class="btn-whatif" data-h="2.5" onclick="applyWhatIf(2.5)">+2.5 м <span class="badge-tag crit">1%</span></button>
+                    </div>
+                    <div class="whatif-slider-container">
+                        <div class="whatif-slider-header">
+                            <span>Плавная регулировка горизонта:</span>
+                            <strong id="whatIfSliderLabel" class="whatif-slider-label">+0.0 м</strong>
+                        </div>
+                        <input type="range" id="whatIfSlider" class="whatif-slider" min="0.0" max="3.0" step="0.1" value="0.0" oninput="onWhatIfSliderInput(this.value)" onchange="applyWhatIf(parseFloat(this.value))">
+                    </div>
+                    <div id="whatIfResultBox" class="whatif-result-box" style="display: none;">
+                        <div class="metric-row" style="margin-bottom: 6px;">
+                            <div class="metric-card">
+                                <div class="metric-title">Прогноз разлива</div>
+                                <div class="metric-value text-purple" id="valWhatIfArea">-- га</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-title">Прирост площади</div>
+                                <div class="metric-value text-orange" id="valWhatIfDelta">+-- га</div>
+                            </div>
+                        </div>
+                        <div class="whatif-rec-text" id="valWhatIfRec">--</div>
+                    </div>
+                </div>
+
+                <!-- ERA5 Hydrometeorological Panel -->
+                <div class="weather-panel">
+                    <div class="panel-header">Метеоусловия ERA5 (7-дневное окно)</div>
+                    <div class="metric-row">
+                        <div class="metric-card">
+                            <div class="metric-title">Сумма осадков (7d)</div>
+                            <div class="metric-value text-blue" id="valPrecip7d">-- мм</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">Индекс API (7d)</div>
+                            <div class="metric-value" id="valApi7d">-- мм</div>
+                        </div>
+                    </div>
+                    <div class="weather-sub-metrics">
+                        <div class="weather-sub-item">
+                            <span>Температура (средняя):</span>
+                            <strong id="valWeatherTemp">-- °C</strong>
+                        </div>
+                        <div class="weather-sub-item">
+                            <span>Метео-риск паводка:</span>
+                            <span class="weather-risk-badge" id="weatherRiskBadge">--</span>
+                        </div>
+                    </div>
+                    <!-- Daily Precipitation Sparkline -->
+                    <div class="weather-chart-label">Динамика суточных осадков (ERA5 daily):</div>
+                    <div class="weather-bars-container" id="weatherBars">
+                        <div style="color: #64748b; font-size: 12px;">Загрузка метеоданных...</div>
+                    </div>
+                </div>
+
+                <!-- Land Cover Breakdown -->
+                <div class="landcover-panel">
+                    <div class="panel-header">Затопление по ESA WorldCover</div>
+                    <div class="landcover-bars" id="landcoverBars">
+                        <div style="color: #64748b; font-size: 13px;">Загрузка данных покрова...</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="actions-panel">
-                <button class="btn btn-accent w-full" onclick="exportGeoJSON()">📥 Экспорт контуров (GeoJSON)</button>
-                <button class="btn btn-outline w-full" onclick="openReport()">📄 Сводка ЦУКС МЧС (PDF / Печать)</button>
+            <!-- Sidebar Footer & Info Link -->
+            <div class="sidebar-footer">
+                <div class="sidebar-shortcuts-hint" title="Горячие клавиши оперативного диспетчера">
+                    <span>⌨️ [Tab] Экран</span>
+                    <span>[H] Охват</span>
+                    <span>[1] Сводка</span>
+                    <span>[2] Прогноз</span>
+                    <span>[S] Шторка</span>
+                    <span>[Space] Плеер</span>
+                    <span>[Esc] Скрыть</span>
+                </div>
+                <div class="sidebar-footer-row">
+                    <span class="footer-copy">КосмоХакатон 2026 • v2.4 | Sentinel-1 & 2</span>
+                </div>
             </div>
         </aside>
 
         <!-- Map Container -->
-        <main class="map-container">
+        <main class="map-container" id="mapContainer">
             <div id="map" class="map-view"></div>
-            <!-- Map Overlay Legend -->
-            <div class="map-legend">
-                <div class="legend-item"><span class="color-box water-pre"></span> Водное зеркало «до»</div>
-                <div class="legend-item"><span class="color-box water-peak"></span> Водное зеркало на пике</div>
-                <div class="legend-item"><span class="color-box flood-new"></span> Зона нового затопления</div>
+
+            <!-- Floating Zen-Mode & AOI Extent Controls on Map -->
+            <button id="btnExpandSidebar" class="map-floating-btn btn-expand-sidebar" onclick="toggleSidebarCollapse()" title="Развернуть боковую панель [Tab]" style="display: none;">
+                <span>▶ Панель</span>
+            </button>
+            <button id="btnFitBounds" class="map-floating-btn btn-fit-bounds" onclick="fitCurrentAoiBounds()" title="Исходный охват района (AOI) [H]">
+                <span>⛶</span>
+            </button>
+
+            <!-- Interactive Swipe Divider -->
+            <div id="swipeDivider" class="swipe-divider" style="display: none;">
+                <div class="swipe-line"></div>
+                <div class="swipe-handle">
+                    <span class="swipe-handle-arrow">&harr;</span>
+                </div>
+                <div class="swipe-label left">◀ До паводка (Река)</div>
+                <div class="swipe-label right">Пик паводка (Затопление) ▶</div>
+            </div>
+
+            <!-- Map Overlay Legend (Collapsible) -->
+            <div class="map-legend" id="mapLegend">
+                <div class="legend-header" onclick="toggleLegendCollapse()" title="Свернуть / развернуть легенду">
+                    <span class="legend-header-title">🗺️ Легенда</span>
+                    <span id="legendCaret" class="legend-caret">▾</span>
+                </div>
+                <div id="legendContent" class="legend-content">
+                    <div class="legend-item"><span class="color-box aoi-border"></span> Граница района (AOI)</div>
+                    <div class="legend-item"><span class="color-box water-pre"></span> Водное зеркало «до»</div>
+                    <div class="legend-item"><span class="color-box water-peak"></span> Водное зеркало на пике</div>
+                    <div class="legend-item"><span class="color-box flood-new"></span> Зона нового затопления</div>
+                    <div class="legend-item"><span class="color-box whatif-zone"></span> Прогноз What-If (&Delta;H)</div>
+                    <div class="legend-item"><span class="color-box gauge-pin"></span> Пост Росгидромета (НЯ/ОЯ)</div>
+                    <div id="trapsLegendDynamic" style="display:none;"></div>
+                    <div class="legend-item" id="legEvacRoad" style="display:none;"><span class="color-box evac-road"></span> Перелив автодороги</div>
+                    <div class="legend-item" id="legEvacIsolate" style="display:none;"><span class="color-box evac-isolate"></span> Отрезанный поселок / СНТ</div>
+                    <div class="legend-item" id="legEvacPvr" style="display:none;"><span class="color-box evac-pvr"></span> Безопасный ПВР / Вертодром</div>
+                </div>
+            </div>
+
+            <!-- Floating Timelapse Player Dock -->
+            <div id="timelapseDock" class="timelapse-dock" style="display: none;">
+                <div class="timelapse-header">
+                    <div class="timelapse-title-group">
+                        <span class="timelapse-icon">⏱️</span>
+                        <div>
+                            <div class="timelapse-title">Таймлапс развития паводка: <span id="tlPhaseName">Меженный фон</span></div>
+                            <div class="timelapse-subtitle" id="tlPhaseDesc">Естественное русло, пойма сухая</div>
+                        </div>
+                    </div>
+                    <div class="timelapse-metrics">
+                        <span class="tl-badge date" id="tlDate">2019-07-16</span>
+                        <span class="tl-badge water" id="tlWaterHa">Вода: -- га</span>
+                        <span class="tl-badge stage" id="tlStageCm">&Delta;H: +0 см</span>
+                        <span class="tl-badge risk" id="tlRisk">Норма</span>
+                    </div>
+                    <button class="btn-close-dock" onclick="toggleTimelapse()">✕</button>
+                </div>
+                <div class="timelapse-controls">
+                    <button id="btnTlPlay" class="btn-tl-control primary" onclick="togglePlayTimelapse()">▶ Старт</button>
+                    <button class="btn-tl-control" onclick="stepTimelapse(-1)">⏮</button>
+                    <button class="btn-tl-control" onclick="stepTimelapse(1)">⏭</button>
+                    <input type="range" id="tlSlider" class="timelapse-slider" min="0" max="5" step="1" value="0" oninput="onTimelapseSliderChange(this.value)">
+                    <div class="timelapse-speed">
+                        <button class="btn-speed active" onclick="setTimelapseSpeed(1, this)">1x</button>
+                        <button class="btn-speed" onclick="setTimelapseSpeed(2, this)">2x</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evacuation Directive Drawer -->
+            <div id="evacuationDrawer" class="evacuation-drawer" style="display: none;">
+                <div class="evac-header">
+                    <div class="evac-title">🚨 План эвакуации и анализ отрезания путей (ЦУКС МЧС)</div>
+                    <button class="btn-close-dock" onclick="toggleEvacuationLayer()">✕</button>
+                </div>
+                <div class="evac-body" id="evacContent">
+                    <div style="color: #94a3b8; font-size: 13px;">Загрузка оперативных данных...</div>
+                </div>
+            </div>
+
+            <!-- Cross Section Profile Drawer -->
+            <div id="profileDrawer" class="profile-drawer" style="display: none;">
+                <div class="profile-drawer-header">
+                    <div class="profile-title" id="profileTitle">📊 Поперечный створ речной долины: Загрузка...</div>
+                    <button class="btn-close-drawer" onclick="toggleProfileDrawer()">✕</button>
+                </div>
+                <div class="profile-metrics-grid">
+                    <div class="p-card">
+                        <span class="p-label">Русло в межень</span>
+                        <span class="p-val" id="valPWidthPre">-- м</span>
+                    </div>
+                    <div class="p-card highlight-blue">
+                        <span class="p-label">Ширина разлива (пик)</span>
+                        <span class="p-val text-blue" id="valPWidthPeak">-- м</span>
+                    </div>
+                    <div class="p-card highlight-red">
+                        <span class="p-label">Макс. глубина в створе</span>
+                        <span class="p-val text-red" id="valPDepthMax">-- м</span>
+                    </div>
+                    <div class="p-card highlight-cyan">
+                        <span class="p-label">Живое сечение &omega;</span>
+                        <span class="p-val text-cyan" id="valPArea">-- м²</span>
+                    </div>
+                </div>
+                <div class="profile-chart-container" id="profileChartContainer">
+                    <svg id="profileSvg" class="profile-svg"></svg>
+                </div>
+                <div class="profile-legend">
+                    <span class="p-leg-item"><span class="p-swatch dem"></span> Рельеф дна и поймы (DEM)</span>
+                    <span class="p-leg-item"><span class="p-swatch pre"></span> Меженный горизонт (Pre)</span>
+                    <span class="p-leg-item"><span class="p-swatch peak"></span> Горизонт паводка (Peak)</span>
+                    <span class="p-leg-item"><span class="p-swatch whatif"></span> Прогноз What-If (+&Delta;H)</span>
+                </div>
             </div>
         </main>
+    </div>
+
+
+    <!-- Ablation Study Modal -->
+    <div id="ablationModal" class="modal-overlay" style="display: none;" onclick="onModalOverlayClick(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">ℹ️ Архитектура системы и научно-техническая верификация (ML Ablation)</div>
+                    <div class="modal-subtitle">Количественный вклад каждого модуля конвейера в итоговый Score = 0.99211 (ТОП-1 регламента)</div>
+                </div>
+                <button class="btn-close-modal" onclick="closeAblationModal()">✕</button>
+            </div>
+            <div class="modal-body" id="ablationBody">
+                <div style="color: #94a3b8; font-size: 13px;">Загрузка данных матрицы абляций...</div>
+            </div>
+        </div>
     </div>
 
     <!-- Leaflet JS -->
