@@ -52,3 +52,4 @@ reports/pdf_render_test/
 *.tmp
 new tz/*_raw.txt
 new tz/criteria_diff.txt
+cloud_artifacts/
