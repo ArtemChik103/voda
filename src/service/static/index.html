@@ -20,7 +20,10 @@
                 </div>
                 <div class="brand-actions">
                     <button id="btnSystemInfo" class="btn-brand-info" onclick="openAblationModal()" title="О системе и научно-технической верификации ML-модели">ℹ️</button>
-                    <button id="btnCollapseSidebar" class="btn-brand-collapse" onclick="toggleSidebarCollapse()" title="Свернуть боковую панель в режим Zen [Tab]">◀</button>
+                    <button id="btnCollapseSidebar" class="btn-brand-collapse" onclick="toggleSidebarCollapse()" title="Свернуть боковую панель в режим Zen [Tab]">
+                        <span class="collapse-icon">◀</span>
+                        <span class="mobile-collapse-label"> Карта</span>
+                    </button>
                 </div>
             </div>
 
@@ -44,7 +47,7 @@
             <!-- Hydrological Tools Toolbar -->
             <div class="control-group">
                 <label>Инженерные инструменты:</label>
-                <div class="button-group" style="flex-wrap: wrap; gap: 4px;">
+                <div class="button-group tools-toolbar" style="flex-wrap: wrap; gap: 4px;">
                     <button id="btnToggleGauges" class="btn btn-mode active" onclick="toggleGaugeStations()" title="Сеть гидрологических постов Росгидромета с отметками НЯ/ОЯ">📍 Посты</button>
                     <button id="btnToggleProfile" class="btn btn-mode" onclick="toggleProfileDrawer()" title="Поперечный батиметрический створ речной долины">📊 Створ</button>
                     <button id="btnToggleTraps" class="btn btn-mode" onclick="toggleTrapsLayer()" title="Полигоны 4 типов физических ловушек (ВПП, старицы, пашня, песок)">🛡️ Ловушки</button>

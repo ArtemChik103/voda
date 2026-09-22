@@ -843,6 +843,7 @@ function toggleProfileDrawer() {
             toggleEvacuationLayer();
         }
         autoCollapseLegendForDrawer(true);
+        autoCollapseSidebarOnMobile();
         loadCrossSectionProfile();
     } else {
         if (profilePolyline) {
@@ -1176,6 +1177,7 @@ async function toggleTimelapse() {
 
     if (dock) dock.style.display = "flex";
     autoCollapseLegendForDrawer(true);
+    autoCollapseSidebarOnMobile();
     await loadTimelapseData();
 }
 
@@ -1350,6 +1352,7 @@ async function toggleEvacuationLayer() {
     if (legPvr) legPvr.style.display = "flex";
 
     autoCollapseLegendForDrawer(true);
+    autoCollapseSidebarOnMobile();
     await loadEvacuationData();
 }
 
@@ -1810,6 +1813,8 @@ function focusThreatTarget(type) {
         toggleEvacuationLayer();
     }
 
+    autoCollapseSidebarOnMobile();
+
     map.flyTo([target.lat, target.lon], target.zoom, {
         animate: true,
         duration: 1.2
@@ -1893,6 +1898,15 @@ function initKeyboardShortcuts() {
 // ==========================================
 // 13. SIDEBAR ZEN COLLAPSE & MAP BOUNDS
 // ==========================================
+function autoCollapseSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar && !sidebar.classList.contains("collapsed")) {
+            toggleSidebarCollapse();
+        }
+    }
+}
+
 function toggleSidebarCollapse() {
     const sidebar = document.querySelector(".sidebar");
     const btnExpand = document.getElementById("btnExpandSidebar");
