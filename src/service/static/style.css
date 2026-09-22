@@ -140,10 +140,6 @@ body {
     border-color: #38bdf8;
 }
 
-.mobile-collapse-label {
-    display: none;
-}
-
 .control-group {
     margin-bottom: 18px;
 }
@@ -2000,17 +1996,11 @@ label {
     }
 
     .btn-brand-collapse {
-        width: auto !important;
-        padding: 0 10px !important;
-        gap: 4px !important;
-        font-weight: 700 !important;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 13px !important;
         color: #38bdf8 !important;
         border-color: #38bdf8 !important;
-    }
-
-    .mobile-collapse-label {
-        display: inline !important;
-        font-size: 11px !important;
     }
 
     /* 3. Floating Expand Button (Thumb Zone at Bottom Center) */

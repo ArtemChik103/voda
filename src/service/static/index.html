@@ -6,7 +6,7 @@
     <title>Вода-Космос: Оперативный гидрологический мониторинг</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2.5">
 </head>
 <body>
     <div class="app-layout">
@@ -20,10 +20,7 @@
                 </div>
                 <div class="brand-actions">
                     <button id="btnSystemInfo" class="btn-brand-info" onclick="openAblationModal()" title="О системе и научно-технической верификации ML-модели">ℹ️</button>
-                    <button id="btnCollapseSidebar" class="btn-brand-collapse" onclick="toggleSidebarCollapse()" title="Свернуть боковую панель в режим Zen [Tab]">
-                        <span class="collapse-icon">◀</span>
-                        <span class="mobile-collapse-label"> Карта</span>
-                    </button>
+                    <button id="btnCollapseSidebar" class="btn-brand-collapse" onclick="toggleSidebarCollapse()" title="Свернуть боковую панель в режим Zen [Tab]">◀</button>
                 </div>
             </div>
 
@@ -404,6 +401,6 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=2.5"></script>
 </body>
 </html>
