@@ -1,6 +1,6 @@
 {
   "benchmark_metadata": {
-    "timestamp": "2026-09-22 04:28:27",
+    "timestamp": "2026-09-22 17:47:49",
     "grid_dimensions": "512 x 512 pixels",
     "coverage_area_ha": 2621.4,
     "device": "Standard Multi-Core CPU"
@@ -8,38 +8,38 @@
   "stages": [
     {
       "stage": "1. SAR Calibrated Loading & Deltas",
-      "latency_ms": 15.24,
+      "latency_ms": 15.33,
       "details": "Grid 512x512, temporal delta & ratio"
     },
     {
       "stage": "2. Refined Lee Speckle Filter (7x7)",
-      "latency_ms": 297.35,
+      "latency_ms": 308.35,
       "details": "Speckle variance suppression across 16 tiles"
     },
     {
       "stage": "3. AUX Terrain Resampling (30m -> 10m)",
-      "latency_ms": 31.32,
+      "latency_ms": 38.79,
       "details": "Bilinear DEM/HAND + Nearest GSW/Builtup"
     },
     {
       "stage": "4. Optical Spectral Indices (MSI)",
-      "latency_ms": 16.59,
+      "latency_ms": 17.92,
       "details": "MNDWI (B03/B11) & NDVI (B08/B04)"
     },
     {
       "stage": "5. Physical Engine & 4 Domain Traps",
-      "latency_ms": 2.23,
+      "latency_ms": 2.42,
       "details": "Airport, oxbow lakes, wet cropland, sandbars"
     },
     {
       "stage": "6. Topological Cleaning & Connectivity",
-      "latency_ms": 12.68,
+      "latency_ms": 12.29,
       "details": "8-connected flood seed dilation"
     }
   ],
   "summary": {
-    "total_latency_ms": 96.8,
-    "total_latency_sec": 0.097,
+    "total_latency_ms": 106.21,
+    "total_latency_sec": 0.106,
     "peak_ram_mb": 25.17,
     "ram_limit_spec_mb": 16384.0,
     "ram_safety_margin_ratio": 650.9

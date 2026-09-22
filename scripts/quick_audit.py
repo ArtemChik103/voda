@@ -120,7 +120,7 @@ def main():
     q_water_pre = score_res["Q_water_pre"]
     spec_base = score_res["Spec_base"]
 
-    print(f"  [OK] ИТОГОВЫЙ SCORE: {final_score:.5f} (ТОП-1 уровень)")
+    print(f"  [OK] ИТОГОВЫЙ SCORE: {final_score:.5f} (Норматив перевыполнен)")
     print(f"       - Q_flood      (вес 0.45): {q_flood:.5f} (погрешность <= 50 га)")
     print(f"       - Q_water_peak (вес 0.25): {q_water_pk:.5f} (погрешность <= 200 га)")
     print(f"       - Q_water_pre  (вес 0.15): {q_water_pre:.5f} (погрешность <= 200 га)")

@@ -1510,7 +1510,7 @@ async function openAblationModal() {
             <div style="display:flex;justify-content:space-between;align-items:center;background:#1e293b;border-radius:8px;padding:12px 16px;margin-bottom:12px;">
                 <div>
                     <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;">Интегральный соревновательный Score</div>
-                    <div style="font-size:24px;font-weight:800;color:#4ade80;font-family:Consolas,monospace;">${data.final_score} <span style="font-size:14px;color:#94a3b8;font-weight:400;">(ТОП-1)</span></div>
+                    <div style="font-size:24px;font-weight:800;color:#4ade80;font-family:Consolas,monospace;">${data.final_score} <span style="font-size:13px;color:#94a3b8;font-weight:400;">(целевой: &gt;0.85)</span></div>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;">Суммарный прирост от бейзлайна</div>
