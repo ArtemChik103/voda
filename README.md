@@ -4,10 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests: Passing](https://img.shields.io/badge/tests-73%2F73%20passing-brightgreen.svg)]()
 [![KosmoHackathon 2026](https://img.shields.io/badge/КосмоХакатон-2026-orange.svg)](https://космохакатон.рф)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Cloudflare_Tunnel-blue.svg)](https://logs-bills-transit-oxygen.trycloudflare.com)
 
 > **Кейс:** Оперативный гидрологический мониторинг динамики водных объектов по совместным данным Sentinel-1 (SAR) и Sentinel-2 (MSI)  
 > **Организаторы:** Минобрнауки России, РОСКОСМОС, РТУ МИРЭА (Федеральный проект «Кадры для космоса»)  
-> **Репозиторий:** `ArtemChik103/voda`
+> **Репозиторий:** `ArtemChik103/voda`  
+> **🌐 Интерактивный Web-GIS стенд (Live Demo):** [https://logs-bills-transit-oxygen.trycloudflare.com](https://logs-bills-transit-oxygen.trycloudflare.com)
 
 ---
 
@@ -192,6 +194,7 @@ flowchart TD
    - Встроенная автоматическая проверка выполнения допуска $\le 2\%$.
 
 ### Этап 4: Web-GIS продукт, REST API и гидрологическая отчетность
+- **🌐 Публичный интерактивный стенд (Live Demo):** [https://logs-bills-transit-oxygen.trycloudflare.com](https://logs-bills-transit-oxygen.trycloudflare.com) *(полная адаптация под мобильные устройства и десктоп)*.
 1. **Интерактивный Web-GIS дашборд (`src/service/static/`):**
    - Одностраничное приложение (SPA) на Leaflet с профессиональными подложками Esri World Imagery (Спутник) и OSM Dark.
    - Полное соблюдение картографических требований: префикс атрибуции Leaflet отключен, посторонние знаки скрыты.

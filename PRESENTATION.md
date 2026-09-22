@@ -3,6 +3,7 @@
 **Серия соревнований «КосмоХакатон 2026» | Федеральный проект «Кадры для космоса»**  
 **Организаторы:** Минобрнауки России, РОСКОСМОС, РТУ МИРЭА  
 **Команда разработки:** Репозиторий `ArtemChik103/voda`  
+**🌐 Интерактивный стенд решения (Live Demo):** [https://logs-bills-transit-oxygen.trycloudflare.com](https://logs-bills-transit-oxygen.trycloudflare.com)  
 *Регламент защиты: 7 минут доклад + 3 минуты ответы на вопросы жюри (Q&A)*
 
 ---
@@ -117,6 +118,7 @@
 ---
 
 ### Слайд 9. Продуктовый Web-GIS сервис и REST API
+- **🌐 Публичный интерактивный стенд решения (Live Demo):** [https://logs-bills-transit-oxygen.trycloudflare.com](https://logs-bills-transit-oxygen.trycloudflare.com)
 - **Web-GIS интерфейс (`src/service/static/`):**
   * Спутниковая подложка высокого разрешения Esri World Imagery (без водяных знаков, префикс Leaflet скрыт).
   * Векторный контур официальных границ AOI с карточкой ландшафта, площади и факторов риска.
